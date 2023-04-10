@@ -1,0 +1,25 @@
+<mat-toolbar>
+    <span>Count It</span>
+</mat-toolbar>
+<table mat-table [dataSource]="counts">
+    <ng-container matColumnDef="amount">
+        <th mat-header-cell *matHeaderCellDef> Amount </th>
+        <td mat-cell *matCellDef="let count"> {{count.amount}} </td>
+    </ng-container>
+    <ng-container matColumnDef="block">
+        <th mat-header-cell *matHeaderCellDef> Block </th>
+        <td mat-cell *matCellDef="let count"> {{count.block.name}} </td>
+    </ng-container>
+    <ng-container matColumnDef="product">
+        <th mat-header-cell *matHeaderCellDef> Product </th>
+        <td mat-cell *matCellDef="let count"> {{count.product.name}} </td>
+    </ng-container>
+    <ng-container matColumnDef="employee">
+        <th mat-header-cell *matHeaderCellDef> Employee </th>
+        <td mat-cell *matCellDef="let count"> {{count.employee.nick_name}} </td>
+    </ng-container>
+
+    <!-- Rows -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
