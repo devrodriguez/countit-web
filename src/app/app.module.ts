@@ -24,6 +24,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
+import { MatTableExporterModule } from 'mat-table-exporter';
+
 
 @NgModule({
   declarations: [
@@ -53,7 +55,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatCardModule,
     MatPaginatorModule,
     MatInputModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatTableExporterModule
   ],
   providers: [
     

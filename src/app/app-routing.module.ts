@@ -4,6 +4,10 @@ import { SingleReportComponent } from './pages/counts/single-report/single-repor
 
 const routes: Routes = [
   {
+    path: '**',
+    component: SingleReportComponent
+  },
+  {
     path: 'report',
     component: SingleReportComponent
   }

@@ -1,10 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs';
 import { Count } from 'src/app/interfaces/count';
 import { CountService } from 'src/app/services/count.service';
 
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
+
+import { MatTableExporterDirective, ExportType } from 'mat-table-exporter';
 
 @Component({
   selector: 'app-single-report',
@@ -13,6 +14,7 @@ import { MatPaginator } from '@angular/material/paginator';
 })
 export class SingleReportComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
+  @ViewChild('exporter') exporter: MatTableExporterDirective | null = null;
 
   displayedColumns: string[] = [
     'workpoint',
@@ -49,6 +51,14 @@ export class SingleReportComponent implements OnInit {
 
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
+    }
+  }
+
+  exportTable(type: ExportType | 'csv' | 'xlsx') {
+    if (this.exporter) {
+      this.exporter.exportTable(type, {
+        'fileName': 'report-counts'
+      })
     }
   }
 }
