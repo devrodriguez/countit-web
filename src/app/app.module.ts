@@ -1,6 +1,7 @@
 import { NgModule, isDevMode } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -22,18 +23,25 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
 import { MatTableExporterModule } from 'mat-table-exporter';
-
+import { QRCodeModule } from 'angularx-qrcode';
+import { EmployeesComponent } from './pages/admin/employees/employees.component';
+import { QrComponent } from './components/qr/qr.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    SingleReportComponent
+    SingleReportComponent,
+    EmployeesComponent,
+    QrComponent
   ],
   imports: [
     BrowserModule,
+    FormsModule,
+    ReactiveFormsModule,
     AppRoutingModule,
     HttpClientModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
@@ -55,8 +63,10 @@ import { MatTableExporterModule } from 'mat-table-exporter';
     MatCardModule,
     MatPaginatorModule,
     MatInputModule,
+    MatDialogModule,
     MatFormFieldModule,
-    MatTableExporterModule
+    MatTableExporterModule,
+    QRCodeModule
   ],
   providers: [
     

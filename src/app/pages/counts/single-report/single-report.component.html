@@ -14,7 +14,7 @@
     </section>
     <section *ngIf="dataSource.data.length">
         <table matTableExporter mat-table [dataSource]="dataSource" #exporter="matTableExporter">
-            <!-- Cellas -->
+            <!-- Cells -->
             <ng-container matColumnDef="workpoint">
                 <th mat-header-cell *matHeaderCellDef>Workpoint</th>
                 <td mat-cell *matCellDef="let count">{{ count.workpoint_code }} - {{ count.workpoint_name }}</td>

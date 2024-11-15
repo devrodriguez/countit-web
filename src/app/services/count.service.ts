@@ -10,7 +10,7 @@ export class CountService {
   private countsColl: CollectionReference<DocumentData>;
 
   constructor(
-    private readonly firestore: Firestore 
+    private readonly firestore: Firestore
   ) {
     this.countsColl = collection(this.firestore, 'counts');
   }
