@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { Count } from 'src/app/interfaces/count';
 import { CountService } from 'src/app/services/count.service';
 
@@ -12,8 +12,13 @@ import { MatTableExporterDirective, ExportType } from 'mat-table-exporter';
   templateUrl: './single-report.component.html',
   styleUrls: ['./single-report.component.scss']
 })
-export class SingleReportComponent implements OnInit {
-  @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
+export class SingleReportComponent {
+  dataSource = new MatTableDataSource<Count>()
+  @ViewChild(MatPaginator) set matPaginator(paginator: MatPaginator) {
+    this.dataSource.paginator = paginator
+  };
+
+  // @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
   @ViewChild('exporter') exporter: MatTableExporterDirective | null = null;
 
   displayedColumns: string[] = [
@@ -23,25 +28,25 @@ export class SingleReportComponent implements OnInit {
     'amount',
     'created_at'
   ];
-  dataSource = new MatTableDataSource<Count>()
 
-  public counts: Count[] = []
+  public counts!: Count[]
 
   constructor(
     private readonly countsSrv: CountService
-  ) {}
-
-  ngOnInit(): void {
-      this.loadCounts()
+  ) {
+    this.loadCounts()
   }
 
   loadCounts() {
     this.countsSrv.getCounts()
-    .subscribe(counts => {
-      this.dataSource = new MatTableDataSource<Count>(counts);
-      this.dataSource.paginator = this.paginator
-    }, err => {
-      console.error(err);
+    .subscribe({
+      next: counts => {
+        this.dataSource = new MatTableDataSource<Count>(counts)
+        // this.dataSource.paginator = this.paginator
+      },
+      error: err => {
+        console.error(err);
+      }
     })
   }
 
