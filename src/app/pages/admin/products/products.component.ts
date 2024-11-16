@@ -2,40 +2,40 @@ import { Component, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 
-import { Employee } from 'src/app/interfaces/employee';
-import { EmployeesService } from 'src/app/services/employees.service';
+import { Product } from 'src/app/interfaces/product';
+import { ProductsService } from 'src/app/services/products.service';
 import { MatDialog } from '@angular/material/dialog';
 import { QrComponent } from 'src/app/components/qr/qr.component';
 
 @Component({
-  selector: 'app-employees',
-  templateUrl: './employees.component.html',
-  styleUrls: ['./employees.component.scss']
+  selector: 'app-products',
+  templateUrl: './products.component.html',
+  styleUrls: ['./products.component.scss']
 })
-export class EmployeesComponent {
+export class ProductsComponent {
   @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
 
-  employeesList: Employee[] | null = null
+  productsList: Product[] | null = null
   displayedColumns: string[] = [
     'code',
     'name',
     'qr',
     'print'
   ];
-  dataSource = new MatTableDataSource<Employee>()
+  dataSource = new MatTableDataSource<Product>()
 
   constructor(
-    private employeesSrv: EmployeesService,
+    private productsSrv: ProductsService,
     private matDialogCtrl: MatDialog
   ) {
-    this.loadEmployees()
+    this.loadProducts()
   }
 
-  loadEmployees() {
-    this.employeesSrv.getEmployees()
+  loadProducts() {
+    this.productsSrv.getProducts()
     .subscribe({
-      next: employeeData => {
-        this.dataSource = new MatTableDataSource<Employee>(employeeData)
+      next: productData => {
+        this.dataSource = new MatTableDataSource<Product>(productData)
         this.dataSource.paginator = this.paginator
       },
       error: err => {
@@ -44,7 +44,7 @@ export class EmployeesComponent {
     })
   }
 
-  showQRModal(employee: Employee) {
+  showQRModal(employee: Product) {
     if (!employee.code) return
     
     this.matDialogCtrl.open(QrComponent, {
@@ -61,6 +61,7 @@ export class EmployeesComponent {
     setTimeout(()=> {
       qrWindow?.print()
       qrWindow?.close()
-    }, 100) 
+    }, 100)
+    
   }
 }

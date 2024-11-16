@@ -1,41 +1,41 @@
 import { Component, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 
-import { Employee } from 'src/app/interfaces/employee';
-import { EmployeesService } from 'src/app/services/employees.service';
-import { MatDialog } from '@angular/material/dialog';
 import { QrComponent } from 'src/app/components/qr/qr.component';
+import { Workpoint } from 'src/app/interfaces/workpoint';
+import { WorkpointService } from 'src/app/services/workpoint.service';
 
 @Component({
-  selector: 'app-employees',
-  templateUrl: './employees.component.html',
-  styleUrls: ['./employees.component.scss']
+  selector: 'app-workpoint',
+  templateUrl: './workpoint.component.html',
+  styleUrls: ['./workpoint.component.scss']
 })
-export class EmployeesComponent {
+export class WorkpointComponent {
   @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
 
-  employeesList: Employee[] | null = null
+  workpointList: Workpoint[] | null = null
   displayedColumns: string[] = [
     'code',
     'name',
     'qr',
     'print'
   ];
-  dataSource = new MatTableDataSource<Employee>()
+  dataSource = new MatTableDataSource<Workpoint>()
 
   constructor(
-    private employeesSrv: EmployeesService,
+    private workpointSrv: WorkpointService,
     private matDialogCtrl: MatDialog
   ) {
-    this.loadEmployees()
+    this.loadWorkpoints()
   }
 
-  loadEmployees() {
-    this.employeesSrv.getEmployees()
+  loadWorkpoints() {
+    this.workpointSrv.getWorkpoints()
     .subscribe({
-      next: employeeData => {
-        this.dataSource = new MatTableDataSource<Employee>(employeeData)
+      next: wpData => {
+        this.dataSource = new MatTableDataSource<Workpoint>(wpData)
         this.dataSource.paginator = this.paginator
       },
       error: err => {
@@ -44,12 +44,10 @@ export class EmployeesComponent {
     })
   }
 
-  showQRModal(employee: Employee) {
-    if (!employee.code) return
-    
+  showQRModal(workpoint: Workpoint) {
     this.matDialogCtrl.open(QrComponent, {
       data: {
-        qrData: employee.code
+        qrData: workpoint.code
       }
     })
   }
@@ -61,6 +59,8 @@ export class EmployeesComponent {
     setTimeout(()=> {
       qrWindow?.print()
       qrWindow?.close()
-    }, 100) 
+    }, 100)
+    
   }
+
 }

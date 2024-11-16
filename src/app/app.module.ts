@@ -25,18 +25,25 @@ import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatTabsModule } from '@angular/material/tabs';
 
 import { MatTableExporterModule } from 'mat-table-exporter';
 import { QRCodeModule } from 'angularx-qrcode';
 import { EmployeesComponent } from './pages/admin/employees/employees.component';
 import { QrComponent } from './components/qr/qr.component';
+import { AdminComponent } from './pages/admin/admin/admin.component';
+import { WorkpointComponent } from './pages/admin/workpoint/workpoint.component';
+import { ProductsComponent } from './pages/admin/products/products.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     SingleReportComponent,
     EmployeesComponent,
-    QrComponent
+    QrComponent,
+    AdminComponent,
+    WorkpointComponent,
+    ProductsComponent
   ],
   imports: [
     BrowserModule,
@@ -66,6 +73,7 @@ import { QrComponent } from './components/qr/qr.component';
     MatDialogModule,
     MatFormFieldModule,
     MatTableExporterModule,
+    MatTabsModule,
     QRCodeModule
   ],
   providers: [
