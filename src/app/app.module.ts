@@ -26,6 +26,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { MatTableExporterModule } from 'mat-table-exporter';
 import { QRCodeModule } from 'angularx-qrcode';
@@ -34,6 +35,7 @@ import { QrComponent } from './components/qr/qr.component';
 import { AdminComponent } from './pages/admin/admin/admin.component';
 import { WorkpointComponent } from './pages/admin/workpoint/workpoint.component';
 import { ProductsComponent } from './pages/admin/products/products.component';
+import { EditEmployeeComponent } from './components/edit-employee/edit-employee.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +45,8 @@ import { ProductsComponent } from './pages/admin/products/products.component';
     QrComponent,
     AdminComponent,
     WorkpointComponent,
-    ProductsComponent
+    ProductsComponent,
+    EditEmployeeComponent
   ],
   imports: [
     BrowserModule,
@@ -74,6 +77,7 @@ import { ProductsComponent } from './pages/admin/products/products.component';
     MatFormFieldModule,
     MatTableExporterModule,
     MatTabsModule,
+    MatSnackBarModule,
     QRCodeModule
   ],
   providers: [

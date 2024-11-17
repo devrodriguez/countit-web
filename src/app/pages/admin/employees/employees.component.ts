@@ -6,6 +6,7 @@ import { Employee } from 'src/app/interfaces/employee';
 import { EmployeesService } from 'src/app/services/employees.service';
 import { MatDialog } from '@angular/material/dialog';
 import { QrComponent } from 'src/app/components/qr/qr.component';
+import { EditEmployeeComponent } from 'src/app/components/edit-employee/edit-employee.component';
 
 @Component({
   selector: 'app-employees',
@@ -19,6 +20,7 @@ export class EmployeesComponent {
   displayedColumns: string[] = [
     'code',
     'name',
+    'edit',
     'qr',
     'print'
   ];
@@ -51,6 +53,12 @@ export class EmployeesComponent {
       data: {
         qrData: employee.code
       }
+    })
+  }
+
+  showCreateEmployee(employee: Employee = {} as Employee) {
+    this.matDialogCtrl.open(EditEmployeeComponent, {
+      data: employee
     })
   }
 
