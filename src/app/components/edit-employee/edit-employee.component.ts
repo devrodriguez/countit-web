@@ -6,6 +6,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Employee } from 'src/app/interfaces/employee';
 import { EmployeesService } from 'src/app/services/employees.service';
 import { AlreadyExist } from 'src/app/helpers/errors/alreadyExist';
+import { EMPLOYEE_STATUS_DISABLED } from 'src/app/helpers/constants/employee';
 
 
 @Component({
@@ -25,7 +26,9 @@ export class EditEmployeeComponent implements OnInit {
     private readonly matSnackBar: MatSnackBar,
     private readonly employeeFormBuilder: FormBuilder,
     private readonly employeeSrv: EmployeesService
-  ){}
+  ){
+
+  }
 
   ngOnInit(): void {
     this.employeeFormGr = this.employeeFormBuilder.group({
@@ -41,25 +44,41 @@ export class EditEmployeeComponent implements OnInit {
 
   employeeFormSubmit() {
     this.newEmployee = this.employeeFormGr.value
-    this.newEmployee.id = this.dataEmployee.id
+    if (this.dataEmployee.id) {
+      this.newEmployee.id = this.dataEmployee.id
+    }
 
     this.employeeSrv.upsertEmployee(this.newEmployee)
     .then(res => {
-      this.presentSnackBar('Worker created successfully')
+      let message = 'Employee created successfully'
+      if (this.newEmployee.id) {
+        message = 'Employee updated successfully'
+      }
+
+      this.presentSnackBar(message)
       this.employeeForm.reset()
       this.dialogEmployeeRef.close()
     })
     .catch(err => {
       if (err instanceof AlreadyExist) {
-        this.presentSnackBar(err.message)
+        this.presentSnackBar('Employee with provided code already exist')
         return  
       }
-      
-      this.presentSnackBar('Could not create worker')
+
+      this.presentSnackBar('Could not create emloyee')
       console.error(err)
     })
   }
 
+  deleteEmployee() {
+    this.newEmployee = this.employeeFormGr.value
+    
+    if (this.newEmployee && this.newEmployee) {
+      this.newEmployee.status = EMPLOYEE_STATUS_DISABLED
+      this.employeeSrv.upsertEmployee(this.newEmployee)
+    }
+  }
+ 
   presentSnackBar(message: string) {
     this.matSnackBar.open(message, undefined, {
       duration: 3000

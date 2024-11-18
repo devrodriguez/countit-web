@@ -1,5 +1,5 @@
 <div class="page-container">
-    <section>
+    <section *ngIf="dataSource.data.length">
         <table mat-table [dataSource]="dataSource">
             <ng-container matColumnDef="code">
                 <th mat-header-cell *matHeaderCellDef>Code</th>

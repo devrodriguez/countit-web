@@ -2,7 +2,7 @@
     <section class="edit-section">
         <button mat-raised-button (click)="showCreateEmployee()" class="mr-10">New Employee</button>
     </section>
-    <section>
+    <section *ngIf="dataSource.data.length">
         <table mat-table [dataSource]="dataSource">
             <ng-container matColumnDef="code">
                 <th mat-header-cell *matHeaderCellDef>Code</th>
