@@ -36,6 +36,8 @@ import { AdminComponent } from './pages/admin/admin/admin.component';
 import { WorkpointComponent } from './pages/admin/workpoint/workpoint.component';
 import { ProductsComponent } from './pages/admin/products/products.component';
 import { EditEmployeeComponent } from './components/edit-employee/edit-employee.component';
+import { SigninComponent } from './pages/auth/signin/signin.component';
+import { NavToolbarComponent } from './components/nav-toolbar/nav-toolbar.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +48,9 @@ import { EditEmployeeComponent } from './components/edit-employee/edit-employee.
     AdminComponent,
     WorkpointComponent,
     ProductsComponent,
-    EditEmployeeComponent
+    EditEmployeeComponent,
+    SigninComponent,
+    NavToolbarComponent
   ],
   imports: [
     BrowserModule,
@@ -63,9 +67,9 @@ import { EditEmployeeComponent } from './components/edit-employee/edit-employee.
     BrowserAnimationsModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
+    provideFirestore(() => getFirestore()),
     provideDatabase(() => getDatabase()),
     provideStorage(() => getStorage()),
-    provideFirestore(() => getFirestore()),
     MatButtonModule,
     MatTableModule,
     MatToolbarModule,
