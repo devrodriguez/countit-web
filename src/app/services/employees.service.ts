@@ -8,7 +8,6 @@ import {
   updateDoc, 
   addDoc, 
   doc,
-  setDoc,
   query,
   where,
   getDocs
@@ -32,7 +31,6 @@ export class EmployeesService {
 
   getEmployees() {
     const docQuery = query(this.employeesRef, where('status', '==', 'enabled'))
-    // const docsSnap = getDocs(docQuery)
 
     return collectionData(docQuery, {
       idField: 'id'

@@ -21,21 +21,21 @@ export class EditEmployeeComponent implements OnInit {
   public employeeFormGr!: FormGroup
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public dataEmployee: Employee,
+    @Inject(MAT_DIALOG_DATA) public employeeData: Employee,
     public dialogEmployeeRef: MatDialogRef<EditEmployeeComponent>,
     private readonly matSnackBar: MatSnackBar,
     private readonly employeeFormBuilder: FormBuilder,
     private readonly employeeSrv: EmployeesService
-  ){
-
-  }
+  ){}
 
   ngOnInit(): void {
+    const { code, name } = this.employeeData
+
     this.employeeFormGr = this.employeeFormBuilder.group({
-      code: new FormControl(this.dataEmployee.code, [
+      code: new FormControl(code, [
         Validators.required, 
-        Validators.pattern('^[0-9]*$')]),
-      name: new FormControl(this.dataEmployee.name, [
+        Validators.minLength(5)]),
+      name: new FormControl(name, [
         Validators.required,
         Validators.minLength(5)
       ])
@@ -44,8 +44,8 @@ export class EditEmployeeComponent implements OnInit {
 
   employeeFormSubmit() {
     this.newEmployee = this.employeeFormGr.value
-    if (this.dataEmployee.id) {
-      this.newEmployee.id = this.dataEmployee.id
+    if (this.employeeData.id) {
+      this.newEmployee.id = this.employeeData.id
     }
 
     this.employeeSrv.upsertEmployee(this.newEmployee)
@@ -73,7 +73,7 @@ export class EditEmployeeComponent implements OnInit {
   deleteEmployee() {
     this.newEmployee = this.employeeFormGr.value
     
-    if (this.newEmployee && this.newEmployee) {
+    if (this.newEmployee) {
       this.newEmployee.status = EMPLOYEE_STATUS_DISABLED
       this.employeeSrv.upsertEmployee(this.newEmployee)
     }

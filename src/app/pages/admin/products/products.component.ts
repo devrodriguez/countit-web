@@ -6,6 +6,7 @@ import { Product } from 'src/app/interfaces/product';
 import { ProductsService } from 'src/app/services/products.service';
 import { MatDialog } from '@angular/material/dialog';
 import { QrComponent } from 'src/app/components/qr/qr.component';
+import { EditProductComponent } from 'src/app/components/edit-product/edit-product.component';
 
 @Component({
   selector: 'app-products',
@@ -19,6 +20,7 @@ export class ProductsComponent {
   displayedColumns: string[] = [
     'code',
     'name',
+    'edit',
     'qr',
     'print'
   ];
@@ -41,6 +43,12 @@ export class ProductsComponent {
       error: err => {
         console.error(err)
       }
+    })
+  }
+
+  showCreateProduct(product: Product = {} as Product) {
+    this.matDialogCtrl.open(EditProductComponent, {
+      data: product
     })
   }
 

@@ -38,6 +38,8 @@ import { ProductsComponent } from './pages/admin/products/products.component';
 import { EditEmployeeComponent } from './components/edit-employee/edit-employee.component';
 import { SigninComponent } from './pages/auth/signin/signin.component';
 import { NavToolbarComponent } from './components/nav-toolbar/nav-toolbar.component';
+import { EditWorkpointComponent } from './components/edit-workpoint/edit-workpoint.component';
+import { EditProductComponent } from './components/edit-product/edit-product.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +52,9 @@ import { NavToolbarComponent } from './components/nav-toolbar/nav-toolbar.compon
     ProductsComponent,
     EditEmployeeComponent,
     SigninComponent,
-    NavToolbarComponent
+    NavToolbarComponent,
+    EditWorkpointComponent,
+    EditProductComponent
   ],
   imports: [
     BrowserModule,

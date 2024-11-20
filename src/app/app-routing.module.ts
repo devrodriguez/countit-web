@@ -6,8 +6,6 @@ import { EmployeesComponent } from './pages/admin/employees/employees.component'
 import { SingleReportComponent } from './pages/counts/single-report/single-report.component';
 import { AdminComponent } from './pages/admin/admin/admin.component';
 import { SigninComponent } from './pages/auth/signin/signin.component';
-// import { AuthGuard } from './guards/auth.guard';
-import { LoginGuard } from './guards/login.guard';
 
 const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['login']);
 const redirectLoggedInToItems = () => redirectLoggedInTo(['admin']);

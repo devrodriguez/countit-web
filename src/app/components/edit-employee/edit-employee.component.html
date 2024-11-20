@@ -3,7 +3,7 @@
         <p>
             <mat-form-field class="full-field">
                 <mat-label>Code</mat-label>
-                <input type="text" formControlName="code" matInput [readonly]="dataEmployee && dataEmployee.id">
+                <input type="text" formControlName="code" matInput [readonly]="employeeData && employeeData.id">
                 <mat-error *ngIf="employeeFormGr.invalid && (employeeFormGr.controls['code'].dirty || employeeFormGr.controls['code'].touched)">Code is required</mat-error>
             </mat-form-field>
         </p>
@@ -18,7 +18,7 @@
             <button mat-raised-button color="primary" class="mr-10" [disabled]="employeeFormGr.invalid">
                 Save
             </button>
-            <button mat-raised-button color="secondary" (click)="deleteEmployee()" *ngIf="dataEmployee && dataEmployee.id">
+            <button mat-raised-button color="secondary" (click)="deleteEmployee()" *ngIf="employeeData && employeeData.id">
                 Delete
             </button>
         </p>
