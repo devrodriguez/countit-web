@@ -69,12 +69,16 @@ export class EditProductComponent implements OnInit {
     }
   }
 
-  deleteProduct() {
-    this.newProduct = this.productFormGr.value
+  async deleteProduct() {
+    const product = { ...this.productDataInput }
     
-    if (this.newProduct) {
-      this.newProduct.status = PRODUCT_STATUS_DISABLED
-      this.productSrv.upsertProduct(this.newProduct)
+    try {
+      product.status = PRODUCT_STATUS_DISABLED
+      await this.productSrv.upsertProduct(product)
+      this.dialogProductRef.close()
+      this.presentSnackBar('Product has been deleted')
+    } catch (err) {
+      console.error(err)
     }
   }
 

@@ -1,0 +1,26 @@
+<section class="container">
+    <form [formGroup]="standFormGr" #standForm="ngForm" (ngSubmit)="standFormSubmit()">
+        <p>
+            <mat-form-field class="full-field">
+                <mat-label>Code</mat-label>
+                <input type="text" formControlName="code" matInput [readonly]="standData && standData.id">
+                <mat-error *ngIf="standFormGr.invalid && (standFormGr.controls['code'].dirty || standFormGr.controls['code'].touched)">Code is required</mat-error>
+            </mat-form-field>
+        </p>
+        <p>
+            <mat-form-field class="full-field">
+                <mat-label>Name</mat-label>
+                <input type="text" formControlName="name" matInput>
+                <mat-error *ngIf="standFormGr.invalid && (standFormGr.controls['name'].dirty || standFormGr.controls['name'].touched)">Name is required</mat-error>
+            </mat-form-field>
+        </p>
+        <p>
+            <button mat-raised-button color="primary" class="mr-10" [disabled]="standFormGr.invalid">
+                Save
+            </button>
+            <button mat-raised-button color="secondary" (click)="deleteStand()" type="button" *ngIf="standData && standData.id">
+                Delete
+            </button>
+        </p>
+    </form>
+</section>

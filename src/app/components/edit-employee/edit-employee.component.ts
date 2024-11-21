@@ -70,12 +70,16 @@ export class EditEmployeeComponent implements OnInit {
     })
   }
 
-  deleteEmployee() {
-    this.newEmployee = this.employeeFormGr.value
+  async deleteEmployee() {
+    const employee = { ...this.employeeData }
     
-    if (this.newEmployee) {
-      this.newEmployee.status = EMPLOYEE_STATUS_DISABLED
-      this.employeeSrv.upsertEmployee(this.newEmployee)
+    try {
+      employee.status = EMPLOYEE_STATUS_DISABLED
+      await this.employeeSrv.upsertEmployee(employee)
+      this.dialogEmployeeRef.close()
+      this.presentSnackBar('Employee has been deleted')
+    } catch (err) {
+      console.error(err)
     }
   }
  
@@ -84,5 +88,4 @@ export class EditEmployeeComponent implements OnInit {
       duration: 3000
     });
   }
-
 }

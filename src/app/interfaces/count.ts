@@ -1,14 +1,21 @@
 export interface Count {
     id: string
     amount: number
-    worker_id: string
-    worker_code: string
-    worker_name: string
-    workpoint_id: string
-    workpoint_code: string
-    workpoint_name: string
-    product_id: string
-    product_code: string
-    product_name: string
-    created_at: string
+    employeeID: string
+    employeeCode: string
+    employeeName: string
+    blockID: string
+    blockCode: string
+    blockName: string
+    tableID: string
+    tableCode: string
+    tableName: string
+    productID: string
+    productCode: string
+    productName: string
+    packagingID: string
+    packagingCode: string
+    packagingName: string
+    createdAt: number
+    updatedAt: number
 }

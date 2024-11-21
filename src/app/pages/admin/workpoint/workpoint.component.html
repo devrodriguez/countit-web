@@ -1,4 +1,7 @@
 <div class="page-container">
+    <section class="edit-section">
+        <button mat-raised-button class="mr-10">New Block</button>
+    </section>
     <section *ngIf="dataSource.data.length">
         <table mat-table [dataSource]="dataSource">
             <ng-container matColumnDef="code">

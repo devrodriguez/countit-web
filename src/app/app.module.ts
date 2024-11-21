@@ -40,6 +40,12 @@ import { SigninComponent } from './pages/auth/signin/signin.component';
 import { NavToolbarComponent } from './components/nav-toolbar/nav-toolbar.component';
 import { EditWorkpointComponent } from './components/edit-workpoint/edit-workpoint.component';
 import { EditProductComponent } from './components/edit-product/edit-product.component';
+import { BlockComponent } from './pages/admin/block/block.component';
+import { PackagingComponent } from './pages/admin/packaging/packaging.component';
+import { StandComponent } from './pages/admin/stand/stand.component';
+import { EditBlockComponent } from './components/edit-block/edit-block.component';
+import { EditStandComponent } from './components/edit-stand/edit-stand.component';
+import { EditPackagingComponent } from './components/edit-packaging/edit-packaging.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +60,13 @@ import { EditProductComponent } from './components/edit-product/edit-product.com
     SigninComponent,
     NavToolbarComponent,
     EditWorkpointComponent,
-    EditProductComponent
+    EditProductComponent,
+    BlockComponent,
+    PackagingComponent,
+    StandComponent,
+    EditBlockComponent,
+    EditStandComponent,
+    EditPackagingComponent
   ],
   imports: [
     BrowserModule,
