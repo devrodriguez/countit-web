@@ -1,6 +1,7 @@
 import { NgModule, isDevMode } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -13,19 +14,66 @@ import { provideAuth, getAuth } from '@angular/fire/auth';
 import { provideFirestore, getFirestore } from '@angular/fire/firestore'
 import { provideDatabase,getDatabase } from '@angular/fire/database';
 import { provideStorage,getStorage } from '@angular/fire/storage';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatIconModule } from '@angular/material/icon';
 
 /** Angular Material */
+import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
+import { MatInputModule } from '@angular/material/input';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSelectModule } from '@angular/material/select';
+
+
+import { MatTableExporterModule } from 'mat-table-exporter';
+import { QRCodeModule } from 'angularx-qrcode';
+import { EmployeesComponent } from './pages/admin/employees/employees.component';
+import { QrComponent } from './components/qr/qr.component';
+import { AdminComponent } from './pages/admin/admin/admin.component';
+import { WorkpointComponent } from './pages/admin/workpoint/workpoint.component';
+import { ProductsComponent } from './pages/admin/products/products.component';
+import { EditEmployeeComponent } from './components/edit-employee/edit-employee.component';
+import { SigninComponent } from './pages/auth/signin/signin.component';
+import { NavToolbarComponent } from './components/nav-toolbar/nav-toolbar.component';
+import { EditWorkpointComponent } from './components/edit-workpoint/edit-workpoint.component';
+import { EditProductComponent } from './components/edit-product/edit-product.component';
+import { BlockComponent } from './pages/admin/block/block.component';
+import { PackagingComponent } from './pages/admin/packaging/packaging.component';
+import { StandComponent } from './pages/admin/stand/stand.component';
+import { EditBlockComponent } from './components/edit-block/edit-block.component';
+import { EditStandComponent } from './components/edit-stand/edit-stand.component';
+import { EditPackagingComponent } from './components/edit-packaging/edit-packaging.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    SingleReportComponent
+    SingleReportComponent,
+    EmployeesComponent,
+    QrComponent,
+    AdminComponent,
+    WorkpointComponent,
+    ProductsComponent,
+    EditEmployeeComponent,
+    SigninComponent,
+    NavToolbarComponent,
+    EditWorkpointComponent,
+    EditProductComponent,
+    BlockComponent,
+    PackagingComponent,
+    StandComponent,
+    EditBlockComponent,
+    EditStandComponent,
+    EditPackagingComponent
   ],
   imports: [
     BrowserModule,
+    FormsModule,
+    ReactiveFormsModule,
     AppRoutingModule,
     HttpClientModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
@@ -37,12 +85,23 @@ import { MatTableModule } from '@angular/material/table';
     BrowserAnimationsModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
+    provideFirestore(() => getFirestore()),
     provideDatabase(() => getDatabase()),
     provideStorage(() => getStorage()),
-    provideFirestore(() => getFirestore()),
+    MatButtonModule,
     MatTableModule,
     MatToolbarModule,
-    MatIconModule
+    MatIconModule,
+    MatCardModule,
+    MatPaginatorModule,
+    MatInputModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatTableExporterModule,
+    MatTabsModule,
+    MatSnackBarModule,
+    MatSelectModule,
+    QRCodeModule
   ],
   providers: [
     

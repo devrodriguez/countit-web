@@ -1,0 +1,21 @@
+<app-nav-toolbar></app-nav-toolbar>
+<mat-tab-group animationDuration="0ms" (selectedTabChange)="tabChange($event)">
+    <mat-tab label="Block">
+        <app-block></app-block>
+    </mat-tab>
+    <mat-tab label="Mesa">
+        <app-stand></app-stand>
+    </mat-tab>
+    <mat-tab label="Product">
+        <app-products></app-products>
+    </mat-tab>
+    <mat-tab label="Workpoint">
+        <app-workpoint></app-workpoint>
+    </mat-tab>
+    <mat-tab label="Employee">
+        <app-employees></app-employees>
+    </mat-tab>
+    <mat-tab label="Packaging">
+        <app-packaging></app-packaging>
+    </mat-tab>
+</mat-tab-group>

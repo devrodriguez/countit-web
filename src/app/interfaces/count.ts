@@ -1,21 +1,16 @@
 export interface Count {
+    id: string
     amount: number
-    block: Block
-    employee: Employee
-    product: Product
-}
-
-export interface Block {
-    id: string
-    name: string
-}
-
-export interface Employee {
-    nick_name: string
-}
-
-export interface Product {
-    id: string
-    name: string
-    url_image: string
+    employeeID: string
+    employeeName: string
+    blockID: string
+    blockName: string
+    standID: string
+    standName: string
+    productID: string
+    productName: string
+    packagingID: string
+    packagingName: string
+    createdAt: number
+    updatedAt: number
 }

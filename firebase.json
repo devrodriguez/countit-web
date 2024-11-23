@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "target": "countit-web",
+    "site": "web-countit",
     "public": "dist/countit-web",
     "ignore": [
       "**/.*"

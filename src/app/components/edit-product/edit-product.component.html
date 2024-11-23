@@ -1,0 +1,26 @@
+<section class="container">
+    <form [formGroup]="productFormGr" #productForm="ngForm" (ngSubmit)="submitProductForm()">
+        <p>
+            <mat-form-field class="full-field">
+                <mat-label>Code</mat-label>
+                <input type="text" formControlName="code" matInput [readonly]="productDataInput && productDataInput.id">
+                <mat-error *ngIf="productFormGr.invalid && (productFormGr.controls['code'].dirty || productFormGr.controls['code'].touched)">Code is required</mat-error>
+            </mat-form-field>
+        </p>
+        <p>
+            <mat-form-field class="full-field">
+                <mat-label>Name</mat-label>
+                <input type="text" formControlName="name" matInput>
+                <mat-error *ngIf="productFormGr.invalid && (productFormGr.controls['name'].dirty || productFormGr.controls['name'].touched)">Name is required</mat-error>
+            </mat-form-field>
+        </p>
+        <p>
+            <button mat-raised-button color="primary" class="mr-10" [disabled]="productFormGr.invalid">
+                Save
+            </button>
+            <button mat-raised-button color="secondary" (click)="deleteProduct()" type="button" *ngIf="productDataInput && productDataInput.id">
+                Delete
+            </button>
+        </p>
+    </form>
+</section>
