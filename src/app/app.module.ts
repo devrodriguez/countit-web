@@ -27,6 +27,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSelectModule } from '@angular/material/select';
+
 
 import { MatTableExporterModule } from 'mat-table-exporter';
 import { QRCodeModule } from 'angularx-qrcode';
@@ -98,6 +100,7 @@ import { EditPackagingComponent } from './components/edit-packaging/edit-packagi
     MatTableExporterModule,
     MatTabsModule,
     MatSnackBarModule,
+    MatSelectModule,
     QRCodeModule
   ],
   providers: [

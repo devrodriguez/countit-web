@@ -6,6 +6,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { QrComponent } from 'src/app/components/qr/qr.component';
 import { Workpoint } from 'src/app/interfaces/workpoint';
 import { WorkpointService } from 'src/app/services/workpoint.service';
+import { EditWorkpointComponent } from 'src/app/components/edit-workpoint/edit-workpoint.component';
 
 @Component({
   selector: 'app-workpoint',
@@ -17,8 +18,10 @@ export class WorkpointComponent {
 
   workpointList: Workpoint[] | null = null
   displayedColumns: string[] = [
-    'code',
-    'name',
+    'block',
+    'product',
+    'stand',
+    'edit',
     'qr',
     'print'
   ];
@@ -47,7 +50,7 @@ export class WorkpointComponent {
   showQRModal(workpoint: Workpoint) {
     this.matDialogCtrl.open(QrComponent, {
       data: {
-        qrData: workpoint.code
+        qrData: workpoint.id
       }
     })
   }
@@ -60,7 +63,11 @@ export class WorkpointComponent {
       qrWindow?.print()
       qrWindow?.close()
     }, 100)
-    
   }
 
+  showCreateWorkpoint(workpoint: Workpoint = {} as Workpoint) {
+    this.matDialogCtrl.open(EditWorkpointComponent, {
+      data: workpoint
+    })
+  }
 }

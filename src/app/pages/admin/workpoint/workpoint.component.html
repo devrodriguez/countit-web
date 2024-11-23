@@ -1,16 +1,30 @@
 <div class="page-container">
     <section class="edit-section">
-        <button mat-raised-button class="mr-10">New Block</button>
+        <button mat-raised-button class="mr-10" (click)="showCreateWorkpoint()">New Workpoint</button>
     </section>
     <section *ngIf="dataSource.data.length">
         <table mat-table [dataSource]="dataSource">
-            <ng-container matColumnDef="code">
-                <th mat-header-cell *matHeaderCellDef>Code</th>
-                <td mat-cell *matCellDef="let workpoint">{{ workpoint.code }}</td>
+            <ng-container matColumnDef="block">
+                <th mat-header-cell *matHeaderCellDef>Bloque</th>
+                <td mat-cell *matCellDef="let workpoint">{{ workpoint.block.name }}</td>
             </ng-container>
-            <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef>Name</th>
-                <td mat-cell *matCellDef="let workpoint">{{ workpoint.name }}</td>
+            <ng-container matColumnDef="product">
+                <th mat-header-cell *matHeaderCellDef>Variedad</th>
+                <td mat-cell *matCellDef="let workpoint">{{ workpoint.product.name }}</td>
+            </ng-container>
+            <ng-container matColumnDef="stand">
+                <th mat-header-cell *matHeaderCellDef>Mesa</th>
+                <td mat-cell *matCellDef="let workpoint">{{ workpoint.stand.name }}</td>
+            </ng-container>
+            <ng-container matColumnDef="edit">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let workpoint">
+                    <mat-icon 
+                    aria-hidden="false" aria-label="" 
+                    fontIcon="edit"
+                    (click)="showCreateWorkpoint(workpoint)"
+                    class="row-icon"></mat-icon>
+                </td>
             </ng-container>
             <ng-container matColumnDef="qr">
                 <th mat-header-cell *matHeaderCellDef></th>
@@ -50,6 +64,7 @@
                 ></qrcode>
                 </td>
             </ng-container>
+
             <!-- Rows -->
             <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>

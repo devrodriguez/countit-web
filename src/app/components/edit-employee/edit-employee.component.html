@@ -2,16 +2,16 @@
     <form [formGroup]="employeeFormGr" #employeeForm="ngForm" (ngSubmit)="employeeFormSubmit()">
         <p>
             <mat-form-field class="full-field">
-                <mat-label>Code</mat-label>
-                <input type="text" formControlName="code" matInput [readonly]="employeeData && employeeData.id">
-                <mat-error *ngIf="employeeFormGr.invalid && (employeeFormGr.controls['code'].dirty || employeeFormGr.controls['code'].touched)">Code is required</mat-error>
+                <mat-label>Nombre</mat-label>
+                <input type="text" formControlName="firstName" matInput>
+                <mat-error *ngIf="employeeFormGr.invalid && (employeeFormGr.controls['firstName'].dirty || employeeFormGr.controls['firstName'].touched)">Name is required</mat-error>
             </mat-form-field>
         </p>
         <p>
             <mat-form-field class="full-field">
-                <mat-label>Name</mat-label>
-                <input type="text" formControlName="name" matInput>
-                <mat-error *ngIf="employeeFormGr.invalid && (employeeFormGr.controls['name'].dirty || employeeFormGr.controls['name'].touched)">Name is required</mat-error>
+                <mat-label>Apeliido</mat-label>
+                <input type="text" formControlName="lastName" matInput>
+                <mat-error *ngIf="employeeFormGr.invalid && (employeeFormGr.controls['lastName'].dirty || employeeFormGr.controls['lastName'].touched)">Last name is required</mat-error>
             </mat-form-field>
         </p>
         <p>

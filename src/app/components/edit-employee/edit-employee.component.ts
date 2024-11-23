@@ -29,15 +29,15 @@ export class EditEmployeeComponent implements OnInit {
   ){}
 
   ngOnInit(): void {
-    const { code, name } = this.employeeData
+    const { firstName, lastName } = this.employeeData
 
     this.employeeFormGr = this.employeeFormBuilder.group({
-      code: new FormControl(code, [
+      firstName: new FormControl(firstName, [
         Validators.required, 
-        Validators.minLength(5)]),
-      name: new FormControl(name, [
+        Validators.minLength(3)]),
+      lastName: new FormControl(lastName, [
         Validators.required,
-        Validators.minLength(5)
+        Validators.minLength(3)
       ])
     })
   }
@@ -61,7 +61,7 @@ export class EditEmployeeComponent implements OnInit {
     })
     .catch(err => {
       if (err instanceof AlreadyExist) {
-        this.presentSnackBar('Employee with provided code already exist')
+        this.presentSnackBar('Employee already exist')
         return  
       }
 
@@ -75,7 +75,7 @@ export class EditEmployeeComponent implements OnInit {
     
     try {
       employee.status = EMPLOYEE_STATUS_DISABLED
-      await this.employeeSrv.upsertEmployee(employee)
+      await this.employeeSrv.deleteEmployee(employee)
       this.dialogEmployeeRef.close()
       this.presentSnackBar('Employee has been deleted')
     } catch (err) {

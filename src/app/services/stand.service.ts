@@ -18,6 +18,7 @@ export class StandService {
 
   getStands() {
     const docQuery = query(this.standRef, where('status', '==', 'enabled'))
+    
     return collectionData(docQuery, {
       idField: 'id'
     }) as Observable<Stand[]>
@@ -25,6 +26,18 @@ export class StandService {
 
   addStand(product: Stand) {
     return addDoc(this.standRef, product)
+  }
+
+  deleteStand(stand: Stand) {
+    return updateDoc(
+      doc(
+        this.standRef,
+        stand.id
+      ),
+      {
+        ...stand
+      }
+    )
   }
 
   async upsertStand(stand: Stand) {

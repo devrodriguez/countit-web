@@ -22,9 +22,11 @@ export class SingleReportComponent {
   @ViewChild('exporter') exporter: MatTableExporterDirective | null = null;
 
   displayedColumns: string[] = [
-    'workpoint',
+    'block',
+    'stand',
+    'employee',
     'product',
-    'worker',
+    'packaging',
     'amount',
     'created_at'
   ];

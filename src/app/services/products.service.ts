@@ -1,6 +1,17 @@
 import { Injectable } from '@angular/core';
-
-import { Firestore, collectionData, collection, CollectionReference, DocumentData, addDoc, query, where, getDocs, getDoc, doc, updateDoc } from '@angular/fire/firestore';
+import {
+  Firestore,
+  collectionData,
+  collection,
+  CollectionReference,
+  DocumentData,
+  updateDoc,
+  addDoc,
+  doc,
+  query,
+  where,
+  getDocs
+} from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
 import { Product } from '../interfaces/product';
@@ -27,45 +38,50 @@ export class ProductsService {
   addProduct(product: Product) {
     return addDoc(this.productRef, product)
   }
+  
+  deleteProduct(product: Product) {
+    return updateDoc(
+      doc(
+        this.productRef,
+        product.id
+      ),
+      {
+        ...product
+      }
+    )
+  }
 
   async upsertProduct(product: Product) {
     const now = new Date().getTime()
 
-    const currentProductByCode = await this.getProductByCode(product.code)
+    const productFound = await this.findProduct(product)
+    if (productFound.id) {
+      if (product.id !== productFound.id) throw new AlreadyExist()
+      else if (product.id === productFound.id) return
+    }
 
     if (product.id) {
-      const ref = await getDoc(doc(this.productRef, product.id))
-      if (ref.exists()) {
-        const refData = ref.data() as Product
+      product.updatedAt = now
 
-        if (refData && refData.code === currentProductByCode.code) {
-          product.updatedAt = now
-
-          return updateDoc(
-            doc(
-              this.productRef,
-              product.id
-            ),
-            {
-              ...product
-            }
-          )
+      return updateDoc(
+        doc(
+          this.productRef,
+          product.id
+        ),
+        {
+          ...product
         }
-      }
-    } 
-  
-    if (currentProductByCode.id) {
-      throw new AlreadyExist()
+      )
     }
 
     product.createdAt = now
     product.status = PRODUCT_STATUS_ENABLED
-    
+
     return addDoc(this.productRef, product)
   }
 
-  async getProductByCode(code: string) {
-    const docQuery = query(this.productRef, where('code', '==', code))
+  async findProduct(product: Product) {
+    const docQuery = query(this.productRef, where('name', '==', product.name))
     const snap = await getDocs(docQuery)
 
     if (snap.docs.length === 0) {

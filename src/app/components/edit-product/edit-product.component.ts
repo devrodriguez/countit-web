@@ -60,7 +60,7 @@ export class EditProductComponent implements OnInit {
       this.dialogProductRef.close()
     } catch (err) {
       if (err instanceof AlreadyExist) {
-        this.presentSnackBar('Product with provided code already exist')
+        this.presentSnackBar('Product already exist')
         return  
       }
 
@@ -74,7 +74,7 @@ export class EditProductComponent implements OnInit {
     
     try {
       product.status = PRODUCT_STATUS_DISABLED
-      await this.productSrv.upsertProduct(product)
+      await this.productSrv.deleteProduct(product)
       this.dialogProductRef.close()
       this.presentSnackBar('Product has been deleted')
     } catch (err) {

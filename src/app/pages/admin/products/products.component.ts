@@ -57,7 +57,7 @@ export class ProductsComponent {
     
     this.matDialogCtrl.open(QrComponent, {
       data: {
-        qrData: employee.code
+        qrData: employee.id
       }
     })
   }

@@ -16,7 +16,6 @@ import { Observable } from 'rxjs';
 
 import { Employee } from '../interfaces/employee';
 import { AlreadyExist } from '../helpers/errors/alreadyExist';
-import { getDoc } from 'firebase/firestore';
 import { EMPLOYEE_STATUS_ENABLED } from '../helpers/constants/employee';
 
 @Injectable({
@@ -41,34 +40,40 @@ export class EmployeesService {
     return addDoc(this.employeesRef, employee)
   }
 
+  deleteEmployee(employee: Employee) {
+    return updateDoc(
+      doc(
+        this.employeesRef,
+        employee.id
+      ),
+      {
+        ...employee
+      }
+    )
+  }
+
   async upsertEmployee(employee: Employee) {
     const now = new Date().getTime()
 
-    const currEmpByCode = await this.getEmployeeByCode(employee.code)
+    const employeeFound = await this.findEmployee(employee)
+
+    if (employeeFound.id) {
+      if (employee.id !== employeeFound.id) throw new AlreadyExist()
+      else if (employee.id === employeeFound.id) return
+    }
 
     if (employee.id) {
-      const ref = await getDoc(doc(this.employeesRef, employee.id))
-      if (ref.exists()) {
-        const currEmpById = ref.data() as Employee
+      employee.updatedAt = now
 
-        if (currEmpById && currEmpById.code === currEmpByCode.code) {
-          employee.updatedAt = now
-
-          return updateDoc(
-            doc(
-              this.employeesRef,
-              employee.id
-            ),
-            {
-              ...employee
-            }
-          )
+      return updateDoc(
+        doc(
+          this.employeesRef,
+          employee.id
+        ),
+        {
+          ...employee
         }
-      }
-    } 
-  
-    if (currEmpByCode.id) {
-      throw new AlreadyExist()
+      )
     }
 
     employee.createdAt = now
@@ -77,8 +82,11 @@ export class EmployeesService {
     return addDoc(this.employeesRef, employee)
   }
 
-  async getEmployeeByCode(code: string) {
-    const docQuery = query(this.employeesRef, where('code', '==', code))
+  async findEmployee(employee: Employee) {
+    const docQuery = query(this.employeesRef, 
+      where('firstName', '==', employee.firstName),
+      where('lastName', '==', employee.lastName)
+    )
     const snap = await getDocs(docQuery)
 
     if (snap.docs.length === 0) {

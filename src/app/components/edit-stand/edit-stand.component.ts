@@ -41,7 +41,7 @@ export class EditStandComponent implements OnInit {
     })
   }
 
-  standFormSubmit() {
+  submitStandForm() {
     const { code, name } = this.standFormGr.value
     this.newStand = { code, name, status: STAND_STATUS_ENABLED }
 
@@ -62,7 +62,7 @@ export class EditStandComponent implements OnInit {
     })
     .catch(err => {
       if (err instanceof AlreadyExist) {
-        this.presentSnackBar('Stand with provided code already exist')
+        this.presentSnackBar('Stand already exist')
         return  
       }
 
@@ -76,7 +76,7 @@ export class EditStandComponent implements OnInit {
     
     try {
       stand.status = STAND_STATUS_DISABLED
-      await this.standSrv.upsertStand(stand)
+      await this.standSrv.deleteStand(stand)
       this.presentSnackBar('Stand has been deleted')
       this.dialogStandRef.close()
     } catch (err) {

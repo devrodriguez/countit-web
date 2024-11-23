@@ -18,8 +18,8 @@ export class EmployeesComponent {
 
   employeesList: Employee[] | null = null
   displayedColumns: string[] = [
-    'code',
-    'name',
+    'fname',
+    'lname',
     'edit',
     'qr',
     'print'
@@ -46,12 +46,10 @@ export class EmployeesComponent {
     })
   }
 
-  showQRModal(employee: Employee) {
-    if (!employee.code) return
-    
+  showQRModal(employee: Employee) {    
     this.matDialogCtrl.open(QrComponent, {
       data: {
-        qrData: employee.code
+        qrData: employee.id
       }
     })
   }

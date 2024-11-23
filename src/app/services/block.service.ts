@@ -27,35 +27,41 @@ export class BlockService {
     return addDoc(this.blockRef, product)
   }
 
+  deleteBlock(block: Block) {
+    return updateDoc(
+      doc(
+        this.blockRef,
+        block.id
+      ),
+      {
+        ...block
+      }
+    )
+  }
+
   async upsertBlock(block: Block) {
     const now = new Date().getTime()
 
-    const currEmpByCode = await this.getBlockByCode(block.code)
+    const blockFound = await this.findBlock(block)
+
+    if (blockFound.id) {
+      if (block.id !== blockFound.id) throw new AlreadyExist()
+      else if (block.id === blockFound.id) return
+    }
 
     if (block.id) {
-      const ref = await getDoc(doc(this.blockRef, block.id))
-      if (ref.exists()) {
-        const currEmpById = ref.data() as Block
+      block.updatedAt = now
 
-        if (currEmpById && currEmpById.code === currEmpByCode.code) {
-          block.updatedAt = now
-
-          return updateDoc(
-            doc(
-              this.blockRef,
-              block.id
-            ),
-            {
-              ...block
-            }
-          )
+      return updateDoc(
+        doc(
+          this.blockRef,
+          block.id
+        ),
+        {
+          ...block
         }
-      }
+      )
     } 
-  
-    if (currEmpByCode.id) {
-      throw new AlreadyExist()
-    }
 
     block.createdAt = now
     block.status = BLOCK_STATUS_ENABLED
@@ -63,8 +69,8 @@ export class BlockService {
     return addDoc(this.blockRef, block)
   }
 
-  async getBlockByCode(code: string) {
-    const docQuery = query(this.blockRef, where('code', '==', code))
+  async findBlock(block: Block) {
+    const docQuery = query(this.blockRef, where('name', '==', block.name))
     const snap = await getDocs(docQuery)
 
     if (snap.docs.length === 0) {

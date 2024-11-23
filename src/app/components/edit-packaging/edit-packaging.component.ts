@@ -76,7 +76,7 @@ export class EditPackagingComponent {
     
     try {
       packaging.status = PACKAGING_STATUS_DISABLED
-      await this.packagingSrv.upsertPackaging(packaging)
+      await this.packagingSrv.deletePackaging(packaging)
       this.presentSnackBar('Packaging has been deleted')
       this.dialogPackagingRef.close()
     } catch (err) {

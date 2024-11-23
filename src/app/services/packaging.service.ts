@@ -1,6 +1,19 @@
 import { Injectable } from '@angular/core';
-import { addDoc, collection, collectionData, CollectionReference, doc, DocumentData, Firestore, getDoc, getDocs, query, updateDoc, where } from '@angular/fire/firestore';
+import {
+  Firestore,
+  collectionData,
+  collection,
+  CollectionReference,
+  DocumentData,
+  updateDoc,
+  addDoc,
+  doc,
+  query,
+  where,
+  getDocs
+} from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
+
 import { Packaging } from '../interfaces/packaging';
 import { AlreadyExist } from '../helpers/errors/alreadyExist';
 
@@ -25,43 +38,49 @@ export class PackagingService {
     return addDoc(this.packagingRef, packaging)
   }
 
+  deletePackaging(packaging: Packaging) {
+    return updateDoc(
+      doc(
+        this.packagingRef,
+        packaging.id
+      ),
+      {
+        ...packaging
+      }
+    )
+  }
+
   async upsertPackaging(packaging: Packaging) {
     const now = new Date().getTime()
 
-    const currPackagingByCode = await this.getPackagingByCode(packaging.code)
+    const packagingFound = await this.findPackaging(packaging)
+
+    if (packagingFound.id) {
+      if (packaging.id !== packagingFound.id) throw new AlreadyExist()
+      else if (packaging.id === packagingFound.id) return
+    }
 
     if (packaging.id) {
-      const ref = await getDoc(doc(this.packagingRef, packaging.id))
-      if (ref.exists()) {
-        const currPackagingByID = ref.data() as Packaging
+      packaging.updatedAt = now
 
-        if (currPackagingByID && currPackagingByID.code === currPackagingByCode.code) {
-          packaging.updatedAt = now
-
-          return updateDoc(
-            doc(
-              this.packagingRef,
-              packaging.id
-            ),
-            {
-              ...packaging
-            }
-          )
+      return updateDoc(
+        doc(
+          this.packagingRef,
+          packaging.id
+        ),
+        {
+          ...packaging
         }
-      }
-    } 
-  
-    if (currPackagingByCode.id) {
-      throw new AlreadyExist()
+      )
     }
 
     packaging.createdAt = now
-    
+
     return addDoc(this.packagingRef, packaging)
   }
 
-  async getPackagingByCode(code: string) {
-    const docQuery = query(this.packagingRef, where('code', '==', code))
+  async findPackaging(packaging: Packaging) {
+    const docQuery = query(this.packagingRef, where('name', '==', packaging.name))
     const snap = await getDocs(docQuery)
 
     if (snap.docs.length === 0) {

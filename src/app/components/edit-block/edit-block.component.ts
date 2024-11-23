@@ -62,7 +62,7 @@ export class EditBlockComponent implements OnInit {
     })
     .catch(err => {
       if (err instanceof AlreadyExist) {
-        this.presentSnackBar('Block with provided code already exist')
+        this.presentSnackBar('Block already exist')
         return  
       }
 
@@ -76,7 +76,7 @@ export class EditBlockComponent implements OnInit {
     
     try {
       block.status = BLOCK_STATUS_DISABLED
-      await this.blockSrv.upsertBlock(block)
+      await this.blockSrv.deleteBlock(block)
       this.dialogBlockRef.close()
       this.presentSnackBar('Block has been deleted')
     } catch (err) {
