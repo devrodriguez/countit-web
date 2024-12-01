@@ -1,7 +1,7 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { NgForm, FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthCredentials } from 'src/app/interfaces/auth/credentials';
+
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -10,9 +10,6 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./signin.component.scss']
 })
 export class SigninComponent implements OnInit {
-  @ViewChild('employeeForm') employeeForm!: NgForm;
-
-  private authCredential!: AuthCredentials
   public authFormGr!: FormGroup
 
   constructor(

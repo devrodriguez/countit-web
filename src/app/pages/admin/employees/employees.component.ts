@@ -7,6 +7,9 @@ import { EmployeesService } from 'src/app/services/employees.service';
 import { MatDialog } from '@angular/material/dialog';
 import { QrComponent } from 'src/app/components/qr/qr.component';
 import { EditEmployeeComponent } from 'src/app/components/edit-employee/edit-employee.component';
+import { ActionConfirmComponent } from 'src/app/components/action-confirm/action-confirm.component';
+import { EMPLOYEE_STATUS_DISABLED } from 'src/app/helpers/constants/employee';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-employees',
@@ -22,13 +25,15 @@ export class EmployeesComponent {
     'lname',
     'edit',
     'qr',
-    'print'
+    'print',
+    'remove'
   ];
   dataSource = new MatTableDataSource<Employee>()
 
   constructor(
     private employeesSrv: EmployeesService,
-    private matDialogCtrl: MatDialog
+    private matDialogCtrl: MatDialog,
+    private matSnackBarCtrl: MatSnackBar,
   ) {
     this.loadEmployees()
   }
@@ -46,10 +51,38 @@ export class EmployeesComponent {
     })
   }
 
+  async deleteEmployee(employee: Employee) {
+    try {
+      employee.status = EMPLOYEE_STATUS_DISABLED
+      await this.employeesSrv.deleteEmployee(employee)
+      this.presentSnackBar('El empleado ha sido eliminado')
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
   showQRModal(employee: Employee) {    
     this.matDialogCtrl.open(QrComponent, {
       data: {
         qrData: employee.id
+      }
+    })
+  }
+
+  showRemove(employee: Employee) {
+    this.matDialogCtrl.open(
+      ActionConfirmComponent,
+      {
+        data: {
+          actionName: 'Eliminar empleado',
+          message: `¿Deseas eliminar el empleado ${employee.firstName} ${employee.lastName}?`
+        }
+      }
+    )
+    .afterClosed()
+    .subscribe(async (isConfirmed: Boolean) => {
+      if(isConfirmed) {
+        await this.deleteEmployee(employee)
       }
     })
   }
@@ -68,5 +101,11 @@ export class EmployeesComponent {
       qrWindow?.print()
       qrWindow?.close()
     }, 100) 
+  }
+
+  presentSnackBar(message: string) {
+    this.matSnackBarCtrl.open(message, undefined, {
+      duration: 3000
+    });
   }
 }

@@ -51,9 +51,9 @@ export class EditBlockComponent implements OnInit {
 
     this.blockSrv.upsertBlock(this.newBlock)
     .then(res => {
-      let message = 'Block created successfully'
+      let message = 'Bloque creado correctamente'
       if (this.newBlock.id) {
-        message = 'Block updated successfully'
+        message = 'Bloque actualizado correctamente'
       }
 
       this.presentSnackBar(message)
@@ -62,26 +62,13 @@ export class EditBlockComponent implements OnInit {
     })
     .catch(err => {
       if (err instanceof AlreadyExist) {
-        this.presentSnackBar('Block already exist')
+        this.presentSnackBar('El bloque ya existe')
         return  
       }
 
-      this.presentSnackBar('Could not create emloyee')
+      this.presentSnackBar('No se pudo eliminar el bloque')
       console.error(err)
     })
-  }
-
-  async deleteBlock() {
-    const block = { ...this.blockData }
-    
-    try {
-      block.status = BLOCK_STATUS_DISABLED
-      await this.blockSrv.deleteBlock(block)
-      this.dialogBlockRef.close()
-      this.presentSnackBar('Block has been deleted')
-    } catch (err) {
-      console.error(err)
-    }
   }
  
   presentSnackBar(message: string) {

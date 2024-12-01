@@ -48,6 +48,7 @@ import { StandComponent } from './pages/admin/stand/stand.component';
 import { EditBlockComponent } from './components/edit-block/edit-block.component';
 import { EditStandComponent } from './components/edit-stand/edit-stand.component';
 import { EditPackagingComponent } from './components/edit-packaging/edit-packaging.component';
+import { ActionConfirmComponent } from './components/action-confirm/action-confirm.component';
 
 @NgModule({
   declarations: [
@@ -68,7 +69,8 @@ import { EditPackagingComponent } from './components/edit-packaging/edit-packagi
     StandComponent,
     EditBlockComponent,
     EditStandComponent,
-    EditPackagingComponent
+    EditPackagingComponent,
+    ActionConfirmComponent
   ],
   imports: [
     BrowserModule,
