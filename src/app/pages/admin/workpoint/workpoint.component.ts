@@ -7,6 +7,9 @@ import { QrComponent } from 'src/app/components/qr/qr.component';
 import { Workpoint } from 'src/app/interfaces/workpoint';
 import { WorkpointService } from 'src/app/services/workpoint.service';
 import { EditWorkpointComponent } from 'src/app/components/edit-workpoint/edit-workpoint.component';
+import { WORKPOINT_STATUS_DISABLED } from 'src/app/helpers/constants/workpoint';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ActionConfirmComponent } from 'src/app/components/action-confirm/action-confirm.component';
 
 @Component({
   selector: 'app-workpoint',
@@ -23,13 +26,15 @@ export class WorkpointComponent {
     'stand',
     'edit',
     'qr',
-    'print'
+    'print',
+    'remove',
   ];
   dataSource = new MatTableDataSource<Workpoint>()
 
   constructor(
     private workpointSrv: WorkpointService,
-    private matDialogCtrl: MatDialog
+    private matDialogCtrl: MatDialog,
+    private matSnackBar: MatSnackBar,
   ) {
     this.loadWorkpoints()
   }
@@ -47,10 +52,46 @@ export class WorkpointComponent {
     })
   }
 
+  async deleteWorkpoint(workpoint: Workpoint) {
+    try {
+      workpoint.status = WORKPOINT_STATUS_DISABLED
+      await this.workpointSrv.deleteWorkpoint(workpoint)
+      this.presentSnackBar('Se ha eliminado el puesto de trabajo')
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
   showQRModal(workpoint: Workpoint) {
+    if (!workpoint.id) return
+
     this.matDialogCtrl.open(QrComponent, {
       data: {
         qrData: workpoint.id
+      }
+    })
+  }
+
+  showCreateWorkpoint(workpoint: Workpoint = {} as Workpoint) {
+    this.matDialogCtrl.open(EditWorkpointComponent, {
+      data: workpoint
+    })
+  }
+
+  showRemove(workpoint: Workpoint) {
+    this.matDialogCtrl.open(
+      ActionConfirmComponent,
+      {
+        data: {
+          actionName: 'Eliminar puesto de trabajo',
+          message: `¿Deseas eliminar el puesto de trabajo?`
+        }
+      }
+    )
+    .afterClosed()
+    .subscribe(async (isConfirmed: Boolean) => {
+      if(isConfirmed) {
+        await this.deleteWorkpoint(workpoint)
       }
     })
   }
@@ -65,9 +106,9 @@ export class WorkpointComponent {
     }, 100)
   }
 
-  showCreateWorkpoint(workpoint: Workpoint = {} as Workpoint) {
-    this.matDialogCtrl.open(EditWorkpointComponent, {
-      data: workpoint
-    })
+  presentSnackBar(message: string) {
+    this.matSnackBar.open(message, undefined, {
+      duration: 3000
+    });
   }
 }

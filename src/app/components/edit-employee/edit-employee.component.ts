@@ -97,9 +97,9 @@ export class EditEmployeeComponent implements OnInit {
 
     this.employeeSrv.upsertEmployee(this.newEmployee)
       .then(res => {
-        let message = 'Employee created successfully'
+        let message = 'Empleado creado correctamente'
         if (this.newEmployee.id) {
-          message = 'Employee updated successfully'
+          message = 'Empleado actualizado correctamente'
         }
 
         this.presentSnackBar(message)
@@ -108,11 +108,11 @@ export class EditEmployeeComponent implements OnInit {
       })
       .catch(err => {
         if (err instanceof AlreadyExist) {
-          this.presentSnackBar('Employee already exist')
+          this.presentSnackBar('El empleado ya existe')
           return
         }
 
-        this.presentSnackBar('Could not create emloyee')
+        this.presentSnackBar('No se pudo crear el empleado')
         console.error(err)
       })
   }

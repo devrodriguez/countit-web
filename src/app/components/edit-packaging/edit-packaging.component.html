@@ -2,24 +2,19 @@
     <form [formGroup]="packagingFormGr" #packagingForm="ngForm" (ngSubmit)="packagingFormSubmit()">
         <p>
             <mat-form-field class="full-field">
-                <mat-label>Code</mat-label>
-                <input type="text" formControlName="code" matInput [readonly]="packagingData && packagingData.id">
-                <mat-error *ngIf="packagingFormGr.invalid && (packagingFormGr.controls['code'].dirty || packagingFormGr.controls['code'].touched)">Code is required</mat-error>
-            </mat-form-field>
-        </p>
-        <p>
-            <mat-form-field class="full-field">
-                <mat-label>Name</mat-label>
+                <mat-label>Nombre</mat-label>
                 <input type="text" formControlName="name" matInput>
-                <mat-error *ngIf="packagingFormGr.invalid && (packagingFormGr.controls['name'].dirty || packagingFormGr.controls['name'].touched)">Name is required</mat-error>
+                <mat-error *ngIf="packagingFormGr.invalid && (packagingFormGr.controls['name'].dirty || packagingFormGr.controls['name'].touched)">
+                    El nombre es requerido
+                </mat-error>
             </mat-form-field>
         </p>
         <p>
             <button mat-raised-button color="primary" class="mr-10" [disabled]="packagingFormGr.invalid">
-                Save
+                Guardar
             </button>
-            <button mat-raised-button color="secondary" (click)="deletePackaging()" type="button" *ngIf="packagingData && packagingData.id">
-                Delete
+            <button mat-raised-button color="secondary" (click)="dialogPackagingRef.close()" type="button" *ngIf="packagingData && packagingData.id">
+                Cancelar
             </button>
         </p>
     </form>

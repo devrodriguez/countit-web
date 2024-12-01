@@ -4,7 +4,6 @@ import { Stand } from "./stand"
 
 export interface Workpoint {
     id?: string
-    code?: string
     name?: string
     block: Block
     stand: Stand

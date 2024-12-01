@@ -29,10 +29,10 @@
         </p>
         <p>
             <button mat-raised-button color="primary" class="mr-10" [disabled]="workpointFormGr.invalid">
-                Save
+                Guardar
             </button>
-            <button mat-raised-button color="secondary" type="button" (click)="deleteWorkpoint()">
-                Delete
+            <button mat-raised-button color="secondary" type="button" (click)="dialogWorkpointRef.close()">
+                Cancelar
             </button>
         </p>
     </form>

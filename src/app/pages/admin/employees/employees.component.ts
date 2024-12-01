@@ -61,7 +61,9 @@ export class EmployeesComponent {
     }
   }
 
-  showQRModal(employee: Employee) {    
+  showQRModal(employee: Employee) {  
+    if (!employee.id) return
+    
     this.matDialogCtrl.open(QrComponent, {
       data: {
         qrData: employee.id

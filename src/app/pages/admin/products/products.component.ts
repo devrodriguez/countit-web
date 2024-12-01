@@ -7,6 +7,9 @@ import { ProductsService } from 'src/app/services/products.service';
 import { MatDialog } from '@angular/material/dialog';
 import { QrComponent } from 'src/app/components/qr/qr.component';
 import { EditProductComponent } from 'src/app/components/edit-product/edit-product.component';
+import { PRODUCT_STATUS_DISABLED } from 'src/app/helpers/constants/product';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ActionConfirmComponent } from 'src/app/components/action-confirm/action-confirm.component';
 
 @Component({
   selector: 'app-products',
@@ -18,17 +21,18 @@ export class ProductsComponent {
 
   productsList: Product[] | null = null
   displayedColumns: string[] = [
-    'code',
     'name',
     'edit',
     'qr',
-    'print'
+    'print',
+    'remove'
   ];
   dataSource = new MatTableDataSource<Product>()
 
   constructor(
     private productsSrv: ProductsService,
-    private matDialogCtrl: MatDialog
+    private matDialogCtrl: MatDialog,
+    private readonly matSnackBar: MatSnackBar,
   ) {
     this.loadProducts()
   }
@@ -46,18 +50,46 @@ export class ProductsComponent {
     })
   }
 
+  async deleteProduct(product: Product) {
+    try {
+      product.status = PRODUCT_STATUS_DISABLED
+      await this.productsSrv.deleteProduct(product)
+      this.presentSnackBar('Product has been deleted')
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
   showCreateProduct(product: Product = {} as Product) {
     this.matDialogCtrl.open(EditProductComponent, {
       data: product
     })
   }
 
-  showQRModal(employee: Product) {
-    if (!employee.code) return
+  showQRModal(product: Product) {
+    if (!product.id) return
     
     this.matDialogCtrl.open(QrComponent, {
       data: {
-        qrData: employee.id
+        qrData: product.id
+      }
+    })
+  }
+
+  showRemove(product: Product) {
+    this.matDialogCtrl.open(
+      ActionConfirmComponent,
+      {
+        data: {
+          actionName: 'Eliminar producto',
+          message: `¿Deseas eliminar el producto ${product.name}?`
+        }
+      }
+    )
+    .afterClosed()
+    .subscribe(async (isConfirmed: Boolean) => {
+      if(isConfirmed) {
+        await this.deleteProduct(product)
       }
     })
   }
@@ -70,6 +102,11 @@ export class ProductsComponent {
       qrWindow?.print()
       qrWindow?.close()
     }, 100)
-    
+  }
+
+  presentSnackBar(message: string) {
+    this.matSnackBar.open(message, undefined, {
+      duration: 3000
+    });
   }
 }

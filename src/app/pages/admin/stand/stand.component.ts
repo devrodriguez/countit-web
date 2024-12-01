@@ -6,6 +6,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { Stand } from 'src/app/interfaces/stand';
 import { StandService } from 'src/app/services/stand.service';
 import { EditStandComponent } from 'src/app/components/edit-stand/edit-stand.component';
+import { STAND_STATUS_DISABLED } from 'src/app/helpers/constants/stand';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ActionConfirmComponent } from 'src/app/components/action-confirm/action-confirm.component';
 
 @Component({
   selector: 'app-stand',
@@ -17,15 +20,16 @@ export class StandComponent {
 
   employeesList: Stand[] | null = null
   displayedColumns: string[] = [
-    'code',
     'name',
     'edit',
+    'remove'
   ];
   dataSource = new MatTableDataSource<Stand>()
 
   constructor(
     private standSrv: StandService,
-    private matDialogCtrl: MatDialog
+    private matDialogCtrl: MatDialog,
+    private readonly matSnackBar: MatSnackBar,
   ) {
     this.loadStands()
   }
@@ -43,9 +47,43 @@ export class StandComponent {
     })
   }
 
+  async deleteStand(stand: Stand) {    
+    try {
+      stand.status = STAND_STATUS_DISABLED
+      await this.standSrv.deleteStand(stand)
+      this.presentSnackBar('La mesa ha sido eliminada')
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
   showCreateStand(stand: Stand = {} as Stand) {
     this.matDialogCtrl.open(EditStandComponent, {
       data: stand
     })
+  }
+
+  showRemove(stand: Stand) {
+    this.matDialogCtrl.open(
+      ActionConfirmComponent,
+      {
+        data: {
+          actionName: 'Eliminar mesa',
+          message: `¿Deseas eliminar la mesa ${stand.name}?`
+        }
+      }
+    )
+    .afterClosed()
+    .subscribe(async (isConfirmed: Boolean) => {
+      if(isConfirmed) {
+        await this.deleteStand(stand)
+      }
+    })
+  }
+
+  presentSnackBar(message: string) {
+    this.matSnackBar.open(message, undefined, {
+      duration: 3000
+    });
   }
 }

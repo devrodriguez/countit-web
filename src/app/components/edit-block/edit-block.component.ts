@@ -28,22 +28,18 @@ export class EditBlockComponent implements OnInit {
   ){}
 
   ngOnInit(): void {
-    const { code, name } = this.blockData
+    const { name } = this.blockData
 
     this.blockFormGr = this.blockFormBuilder.group({
-      code: new FormControl(code, [
-        Validators.required, 
-        Validators.minLength(5)]),
       name: new FormControl(name, [
         Validators.required,
-        Validators.minLength(5)
       ])
     })
   }
 
   employeeFormSubmit() {
-    const { code, name } = this.blockFormGr.value
-    this.newBlock = { code, name }
+    const { name } = this.blockFormGr.value
+    this.newBlock = { name }
 
     if (this.blockData.id) {
       this.newBlock.id = this.blockData.id

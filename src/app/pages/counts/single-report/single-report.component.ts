@@ -26,6 +26,7 @@ export class SingleReportComponent {
     'stand',
     'employee',
     'product',
+    'stand_amount',
     'packaging',
     'amount',
     'created_at'
@@ -50,6 +51,17 @@ export class SingleReportComponent {
         console.error(err);
       }
     })
+  }
+
+  getStands(count: Count): number | undefined {
+    const { employee: { productBeds } } = count
+    const { product } = count.workpoint
+
+    if (!productBeds) return 0
+    
+    const productBed = productBeds.find(pb => pb.productName === product.name)
+
+    return productBed?.bedsAmount
   }
 
   applyFilter(event: Event) {

@@ -56,9 +56,8 @@ export class EmployeesService {
     const now = new Date().getTime()
 
     const employeeFound = await this.findEmployee(employee)
-
     if (employeeFound !== null) {
-      throw new AlreadyExist()
+      if (employee.id !== employeeFound.id) throw new AlreadyExist()
     }
 
     if (employee.id) {
@@ -87,7 +86,6 @@ export class EmployeesService {
       this.employeesRef, 
       where('firstName', '==', employee.firstName),
       where('lastName', '==', employee.lastName),
-      where('id', '!=', employee.id)
     )
     const snap = await getDocs(docQuery)
 

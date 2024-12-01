@@ -20,7 +20,6 @@ export class BlockComponent {
 
   employeesList: Block[] | null = null
   displayedColumns: string[] = [
-    'code',
     'name',
     'edit',
     'remove',
