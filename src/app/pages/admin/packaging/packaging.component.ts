@@ -16,7 +16,9 @@ import { ActionConfirmComponent } from 'src/app/components/action-confirm/action
   styleUrls: ['./packaging.component.scss']
 })
 export class PackagingComponent {
-  @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
+  @ViewChild(MatPaginator) set matPaginator(paginator: MatPaginator) {
+    this.dataSource.paginator = paginator
+  };
 
   employeesList: Packaging[] | null = null
   displayedColumns: string[] = [
@@ -39,7 +41,6 @@ export class PackagingComponent {
     .subscribe({
       next: data => {
         this.dataSource = new MatTableDataSource<Packaging>(data)
-        this.dataSource.paginator = this.paginator
       },
       error: err => {
         console.error(err)
@@ -51,7 +52,7 @@ export class PackagingComponent {
     try {
       packaging.status = PACKAGING_STATUS_DISABLED
       await this.packagingSrv.deletePackaging(packaging)
-      this.presentSnackBar('Packaging has been deleted')
+      this.presentSnackBar('El ambalaje ha sido eliminado')
     } catch (err) {
       console.error(err)
     }

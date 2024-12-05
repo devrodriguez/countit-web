@@ -17,7 +17,9 @@ import { ActionConfirmComponent } from 'src/app/components/action-confirm/action
   styleUrls: ['./workpoint.component.scss']
 })
 export class WorkpointComponent {
-  @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
+  @ViewChild(MatPaginator) set matPaginator(paginator: MatPaginator) {
+    this.dataSource.paginator = paginator
+  };
 
   workpointList: Workpoint[] | null = null
   displayedColumns: string[] = [
@@ -44,7 +46,6 @@ export class WorkpointComponent {
     .subscribe({
       next: wpData => {
         this.dataSource = new MatTableDataSource<Workpoint>(wpData)
-        this.dataSource.paginator = this.paginator
       },
       error: err => {
         console.error(err)

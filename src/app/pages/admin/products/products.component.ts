@@ -17,7 +17,9 @@ import { ActionConfirmComponent } from 'src/app/components/action-confirm/action
   styleUrls: ['./products.component.scss']
 })
 export class ProductsComponent {
-  @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
+  @ViewChild(MatPaginator) set matPaginator(paginator: MatPaginator) {
+    this.dataSource.paginator = paginator
+  };
 
   productsList: Product[] | null = null
   displayedColumns: string[] = [
@@ -42,7 +44,6 @@ export class ProductsComponent {
     .subscribe({
       next: productData => {
         this.dataSource = new MatTableDataSource<Product>(productData)
-        this.dataSource.paginator = this.paginator
       },
       error: err => {
         console.error(err)
@@ -54,7 +55,7 @@ export class ProductsComponent {
     try {
       product.status = PRODUCT_STATUS_DISABLED
       await this.productsSrv.deleteProduct(product)
-      this.presentSnackBar('Product has been deleted')
+      this.presentSnackBar('El producto ha sido eliminado')
     } catch (err) {
       console.error(err)
     }

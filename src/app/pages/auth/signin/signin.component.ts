@@ -23,14 +23,14 @@ export class SigninComponent implements OnInit {
   ngOnInit(): void {
     this.authFormGr = this.authFormBuilder.group({
       email: new FormControl(
-        'john.rodriguez.25@hotmail.com',
+        '',
         [
           Validators.required,
           Validators.email
         ]
       ),
       password: new FormControl(
-        'Erudito.100',
+        '',
         [
           Validators.required,
           Validators.minLength(5)

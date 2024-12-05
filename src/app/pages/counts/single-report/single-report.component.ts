@@ -18,7 +18,6 @@ export class SingleReportComponent {
     this.dataSource.paginator = paginator
   };
 
-  // @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
   @ViewChild('exporter') exporter: MatTableExporterDirective | null = null;
 
   displayedColumns: string[] = [
@@ -45,7 +44,10 @@ export class SingleReportComponent {
     .subscribe({
       next: counts => {
         this.dataSource = new MatTableDataSource<Count>(counts)
-        // this.dataSource.paginator = this.paginator
+        this.dataSource.filterPredicate = (data: Count, filter: string): boolean => {
+          const dataStr = JSON.stringify(data).toLocaleLowerCase()
+          return dataStr.includes(filter)
+        }
       },
       error: err => {
         console.error(err);

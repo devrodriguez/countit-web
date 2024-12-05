@@ -16,7 +16,9 @@ import { ActionConfirmComponent } from 'src/app/components/action-confirm/action
   styleUrls: ['./stand.component.scss']
 })
 export class StandComponent {
-  @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
+  @ViewChild(MatPaginator) set matPaginator(paginator: MatPaginator) {
+    this.dataSource.paginator = paginator
+  };
 
   employeesList: Stand[] | null = null
   displayedColumns: string[] = [
@@ -39,7 +41,6 @@ export class StandComponent {
     .subscribe({
       next: data => {
         this.dataSource = new MatTableDataSource<Stand>(data)
-        this.dataSource.paginator = this.paginator
       },
       error: err => {
         console.error(err)

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { addDoc, collection, collectionData, CollectionReference, doc, DocumentData, Firestore, getDoc, getDocs, query, updateDoc, where } from '@angular/fire/firestore';
+import { addDoc, collection, collectionData, CollectionReference, doc, DocumentData, Firestore, getDoc, getDocs, query, updateDoc, where, orderBy } from '@angular/fire/firestore';
 
 import { Observable } from 'rxjs';
 
@@ -18,7 +18,11 @@ export class StandService {
   }
 
   getStands() {
-    const docQuery = query(this.standRef, where('status', '==', 'enabled'))
+    const docQuery = query(
+      this.standRef, 
+      where('status', '==', 'enabled'),
+      orderBy('name')
+    )
     
     return collectionData(docQuery, {
       idField: 'id'

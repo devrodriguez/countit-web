@@ -17,7 +17,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./employees.component.scss']
 })
 export class EmployeesComponent {
-  @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
+  @ViewChild(MatPaginator) set matPaginator(paginator: MatPaginator) {
+    this.dataSource.paginator = paginator
+  };
 
   employeesList: Employee[] | null = null
   displayedColumns: string[] = [
@@ -43,7 +45,6 @@ export class EmployeesComponent {
     .subscribe({
       next: employeeData => {
         this.dataSource = new MatTableDataSource<Employee>(employeeData)
-        this.dataSource.paginator = this.paginator
       },
       error: err => {
         console.error(err)

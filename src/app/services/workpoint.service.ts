@@ -1,5 +1,18 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collectionData, collection, CollectionReference, DocumentData, addDoc, doc, updateDoc, query, where, getDocs } from '@angular/fire/firestore';
+import { 
+  Firestore, 
+  collectionData, 
+  collection, 
+  CollectionReference, 
+  DocumentData, 
+  addDoc, 
+  doc, 
+  updateDoc, 
+  query, 
+  where, 
+  getDocs,
+  orderBy 
+} from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
 import { Workpoint } from '../interfaces/workpoint';
