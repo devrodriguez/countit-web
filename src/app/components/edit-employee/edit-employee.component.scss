@@ -1,0 +1,59 @@
+.container {
+    padding: 15px;
+    min-height: 70vh;
+    min-width: 50vw;
+}
+
+.full-field {
+    width: 100%;
+}
+
+.product-bed-scrollable {
+    height: 200px;
+    overflow-y: auto;
+    border-top: solid 1px #eee;
+    border-bottom: solid 1px #eee;
+}
+
+.small-input {
+    padding: 2px 8px;
+    height: 12px;
+}
+
+.product-bed-input {
+    display: flex;
+    align-items: flex-start;
+    padding-top: 10px;
+    .product-field {
+        width: 70%;
+        margin-right: 10px;
+    }
+
+    .stand-field {
+        width: 30%;
+    }
+
+    .action-button {
+        margin-top: 3px;
+        margin-left: 10px;
+    }
+}
+
+.product-bed-list {
+    display: flex;
+    align-items: flex-start;
+    .product-field {
+        width: 70%;
+        margin-right: 10px;
+    }
+
+    .stand-field {
+        width: 30%;
+    }
+
+    .action-button {
+        margin-top: 3px;
+        margin-left: 10px;
+    }
+}
+

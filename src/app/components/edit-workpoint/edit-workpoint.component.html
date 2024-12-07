@@ -1,0 +1,39 @@
+<section class="container">
+    <form [formGroup]="workpointFormGr" #workpointForm="ngForm" (ngSubmit)="submitWorkpointForm()">
+        <p>
+            <mat-form-field class="full-field">
+                <mat-label>Bloque</mat-label>
+                <mat-select formControlName="block" [(ngModel)]="selectedBlock" [compareWith]="compareBlock">
+                    <mat-option *ngFor="let block of blocks" [value]="block">{{ block.name }}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="workpointFormGr.invalid && (workpointFormGr.controls['block'].dirty || workpointFormGr.controls['block'].touched)">Block is required</mat-error>
+            </mat-form-field>
+        </p>
+        <p>
+            <mat-form-field class="full-field">
+                <mat-label>Variedad</mat-label>
+                <mat-select formControlName="product" [(ngModel)]="selectedProduct" [compareWith]="compareProduct">
+                    <mat-option *ngFor="let product of products" [value]="product">{{ product.name }}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="workpointFormGr.invalid && (workpointFormGr.controls['product'].dirty || workpointFormGr.controls['product'].touched)">Product is required</mat-error>
+            </mat-form-field>
+        </p>
+        <p>
+            <mat-form-field class="full-field">
+                <mat-label>Mesa</mat-label>
+                <mat-select formControlName="stand" [(ngModel)]="selectedStand" [compareWith]="compareStand">
+                    <mat-option *ngFor="let stand of stands" [value]="stand">{{ stand.name }}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="workpointFormGr.invalid && (workpointFormGr.controls['stand'].dirty || workpointFormGr.controls['stand'].touched)">Stand is required</mat-error>
+            </mat-form-field>
+        </p>
+        <p>
+            <button mat-raised-button color="primary" class="mr-10" [disabled]="workpointFormGr.invalid">
+                Guardar
+            </button>
+            <button mat-raised-button color="secondary" type="button" (click)="dialogWorkpointRef.close()">
+                Cancelar
+            </button>
+        </p>
+    </form>
+</section>

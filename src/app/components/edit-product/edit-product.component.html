@@ -1,0 +1,19 @@
+<section class="container">
+    <form [formGroup]="productFormGr" #productForm="ngForm" (ngSubmit)="submitProductForm()">
+        <p>
+            <mat-form-field class="full-field">
+                <mat-label>Nombre</mat-label>
+                <input type="text" formControlName="name" matInput>
+                <mat-error *ngIf="productFormGr.invalid && (productFormGr.controls['name'].dirty || productFormGr.controls['name'].touched)">Nombre requerido</mat-error>
+            </mat-form-field>
+        </p>
+        <p>
+            <button mat-raised-button color="primary" class="mr-10" [disabled]="productFormGr.invalid">
+                Guardar
+            </button>
+            <button mat-raised-button color="secondary" (click)="dialogProductRef.close()" type="button">
+                Cancelar
+            </button>
+        </p>
+    </form>
+</section>

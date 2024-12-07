@@ -1,0 +1,28 @@
+<div class="container">
+    <mat-card>
+        <mat-card-content>
+            <img src="assets/images/logo-pressman.png">
+            <form [formGroup]="authFormGr" #authForm="ngForm" (ngSubmit)="signIn()">
+                <p>
+                    <mat-form-field class="full-field">
+                        <mat-label>Usuario</mat-label>
+                        <input type="email" formControlName="email" matInput placeholder="micorreo@dominio.com">
+                        <mat-error *ngIf="authFormGr.invalid && (authFormGr.controls['email'].dirty || authFormGr.controls['email'].touched)">El correo es requerido</mat-error>
+                    </mat-form-field>
+                </p>
+                <p>
+                    <mat-form-field class="full-field">
+                        <mat-label>Contraseña</mat-label>
+                        <input type="password" formControlName="password" matInput>
+                        <mat-error *ngIf="authFormGr.invalid && (authFormGr.controls['password'].dirty || authFormGr.controls['password'].touched)">La contraseña es requerida</mat-error>
+                    </mat-form-field>
+                </p>
+                <p>
+                    <button mat-raised-button color="primary" [disabled]="authFormGr.invalid">
+                        Ingresar
+                    </button>
+                </p>
+            </form>
+        </mat-card-content>
+    </mat-card>
+</div>

@@ -1,0 +1,21 @@
+<section class="container">
+    <form [formGroup]="packagingFormGr" #packagingForm="ngForm" (ngSubmit)="packagingFormSubmit()">
+        <p>
+            <mat-form-field class="full-field">
+                <mat-label>Nombre</mat-label>
+                <input type="text" formControlName="name" matInput>
+                <mat-error *ngIf="packagingFormGr.invalid && (packagingFormGr.controls['name'].dirty || packagingFormGr.controls['name'].touched)">
+                    El nombre es requerido
+                </mat-error>
+            </mat-form-field>
+        </p>
+        <p>
+            <button mat-raised-button color="primary" class="mr-10" [disabled]="packagingFormGr.invalid">
+                Guardar
+            </button>
+            <button mat-raised-button color="secondary" (click)="dialogPackagingRef.close()" type="button" *ngIf="packagingData && packagingData.id">
+                Cancelar
+            </button>
+        </p>
+    </form>
+</section>

@@ -1,0 +1,85 @@
+<div class="page-container">
+    <section class="edit-section">
+        <button mat-raised-button class="mr-10" (click)="showCreateWorkpoint()">Nuevo Puesto</button>
+    </section>
+    <section *ngIf="dataSource.data.length">
+        <table mat-table [dataSource]="dataSource">
+            <ng-container matColumnDef="block">
+                <th mat-header-cell *matHeaderCellDef>Bloque</th>
+                <td mat-cell *matCellDef="let workpoint">{{ workpoint.block.name }}</td>
+            </ng-container>
+            <ng-container matColumnDef="product">
+                <th mat-header-cell *matHeaderCellDef>Variedad</th>
+                <td mat-cell *matCellDef="let workpoint">{{ workpoint.product.name }}</td>
+            </ng-container>
+            <ng-container matColumnDef="stand">
+                <th mat-header-cell *matHeaderCellDef>Mesa</th>
+                <td mat-cell *matCellDef="let workpoint">{{ workpoint.stand.name }}</td>
+            </ng-container>
+            <ng-container matColumnDef="edit">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let workpoint">
+                    <mat-icon 
+                    aria-hidden="false" aria-label="" 
+                    fontIcon="edit"
+                    (click)="showCreateWorkpoint(workpoint)"
+                    class="row-icon"></mat-icon>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="qr">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let workpoint">
+                    <mat-icon 
+                    aria-hidden="false" aria-label="" 
+                    fontIcon="qr_code"
+                    (click)="showQRModal(workpoint)"
+                    class="row-icon"></mat-icon>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="print">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let workpoint">
+                    <mat-icon 
+                    aria-hidden="false" 
+                    aria-label="" 
+                    fontIcon="print" 
+                    (click)="printQR(qr)"
+                    class="row-icon"></mat-icon>
+                    <qrcode
+                    style="display: none;"
+                    #qr
+                    [qrdata]="workpoint.code"
+                    [allowEmptyString]="true"
+                    [alt]="'A custom alt attribute'"
+                    [ariaLabel]="'QR Code image with the following content...'"
+                    [cssClass]="'center'"
+                    [colorDark]="'#3f51b5'"
+                    [colorLight]="'#ffffffff'"
+                    [elementType]="'img'"
+                    [errorCorrectionLevel]="'M'"
+                    [margin]="3"
+                    [scale]="1"
+                    [title]="'Item'"
+                    [width]="300"
+                ></qrcode>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="remove">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let workpoint">
+                    <mat-icon 
+                    aria-hidden="false" aria-label="" 
+                    fontIcon="delete"
+                    (click)="showRemove(workpoint)"
+                    class="row-icon"></mat-icon>
+                </td>
+            </ng-container>
+            <!-- Rows -->
+            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+            aria-label="Select page of periodic elements">
+        </mat-paginator>
+    </section>
+</div>

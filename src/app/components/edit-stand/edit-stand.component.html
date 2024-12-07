@@ -1,0 +1,19 @@
+<section class="container">
+    <form [formGroup]="standFormGr" #standForm="ngForm" (ngSubmit)="submitStandForm()">
+        <p>
+            <mat-form-field class="full-field">
+                <mat-label>Nombre</mat-label>
+                <input type="text" formControlName="name" matInput>
+                <mat-error *ngIf="standFormGr.invalid && (standFormGr.controls['name'].dirty || standFormGr.controls['name'].touched)">Name is required</mat-error>
+            </mat-form-field>
+        </p>
+        <p>
+            <button mat-raised-button color="primary" class="mr-10" [disabled]="standFormGr.invalid">
+                Guardar
+            </button>
+            <button mat-raised-button color="secondary" (click)="dialogStandRef.close()" type="button">
+                Cancelar
+            </button>
+        </p>
+    </form>
+</section>

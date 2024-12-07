@@ -1,0 +1,19 @@
+<section class="container">
+    <form [formGroup]="blockFormGr" #blockForm="ngForm" (ngSubmit)="employeeFormSubmit()">
+        <p>
+            <mat-form-field class="full-field">
+                <mat-label>Nombre</mat-label>
+                <input type="text" formControlName="name" matInput>
+                <mat-error *ngIf="blockFormGr.invalid && (blockFormGr.controls['name'].dirty || blockFormGr.controls['name'].touched)">El nombre es requerido</mat-error>
+            </mat-form-field>
+        </p>
+        <p>
+            <button mat-raised-button color="primary" class="mr-10" [disabled]="blockFormGr.invalid">
+                Guardar
+            </button>
+            <button mat-raised-button color="secondary" (click)="dialogBlockRef.close()" type="button">
+                Cancelar
+            </button>
+        </p>
+    </form>
+</section>
