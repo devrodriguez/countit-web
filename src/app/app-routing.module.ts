@@ -20,7 +20,8 @@ const routes: Routes = [
   {
     path: 'report',
     component: SingleReportComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    data: { authGuardPipe: redirectUnauthorizedToLogin }
   },
   {
     path: 'admin',
@@ -31,7 +32,8 @@ const routes: Routes = [
   {
     path: 'employees',
     component: EmployeesComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    data: { authGuardPipe: redirectUnauthorizedToLogin }
   },
   {
     path: '**', 

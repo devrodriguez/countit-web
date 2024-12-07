@@ -28,22 +28,18 @@ export class EditBlockComponent implements OnInit {
   ){}
 
   ngOnInit(): void {
-    const { code, name } = this.blockData
+    const { name } = this.blockData
 
     this.blockFormGr = this.blockFormBuilder.group({
-      code: new FormControl(code, [
-        Validators.required, 
-        Validators.minLength(5)]),
       name: new FormControl(name, [
         Validators.required,
-        Validators.minLength(5)
       ])
     })
   }
 
   employeeFormSubmit() {
-    const { code, name } = this.blockFormGr.value
-    this.newBlock = { code, name }
+    const { name } = this.blockFormGr.value
+    this.newBlock = { name }
 
     if (this.blockData.id) {
       this.newBlock.id = this.blockData.id
@@ -51,9 +47,9 @@ export class EditBlockComponent implements OnInit {
 
     this.blockSrv.upsertBlock(this.newBlock)
     .then(res => {
-      let message = 'Block created successfully'
+      let message = 'Bloque creado correctamente'
       if (this.newBlock.id) {
-        message = 'Block updated successfully'
+        message = 'Bloque actualizado correctamente'
       }
 
       this.presentSnackBar(message)
@@ -62,26 +58,13 @@ export class EditBlockComponent implements OnInit {
     })
     .catch(err => {
       if (err instanceof AlreadyExist) {
-        this.presentSnackBar('Block already exist')
+        this.presentSnackBar('El bloque ya existe')
         return  
       }
 
-      this.presentSnackBar('Could not create emloyee')
+      this.presentSnackBar('No se pudo eliminar el bloque')
       console.error(err)
     })
-  }
-
-  async deleteBlock() {
-    const block = { ...this.blockData }
-    
-    try {
-      block.status = BLOCK_STATUS_DISABLED
-      await this.blockSrv.deleteBlock(block)
-      this.dialogBlockRef.close()
-      this.presentSnackBar('Block has been deleted')
-    } catch (err) {
-      console.error(err)
-    }
   }
  
   presentSnackBar(message: string) {

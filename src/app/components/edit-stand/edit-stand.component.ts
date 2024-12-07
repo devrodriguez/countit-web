@@ -6,7 +6,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AlreadyExist } from 'src/app/helpers/errors/alreadyExist';
 import { Stand } from 'src/app/interfaces/stand';
 import { StandService } from 'src/app/services/stand.service';
-import { STAND_STATUS_DISABLED, STAND_STATUS_ENABLED } from 'src/app/helpers/constants/stand';
+import { STAND_STATUS_ENABLED } from 'src/app/helpers/constants/stand';
 
 @Component({
   selector: 'app-edit-stand',
@@ -28,22 +28,18 @@ export class EditStandComponent implements OnInit {
   ){}
 
   ngOnInit(): void {
-    const { code, name } = this.standData
+    const { name } = this.standData
 
     this.standFormGr = this.standFormBuilder.group({
-      code: new FormControl(code, [
-        Validators.required, 
-        Validators.minLength(5)]),
       name: new FormControl(name, [
         Validators.required,
-        Validators.minLength(5)
       ])
     })
   }
 
   submitStandForm() {
-    const { code, name } = this.standFormGr.value
-    this.newStand = { code, name, status: STAND_STATUS_ENABLED }
+    const { name } = this.standFormGr.value
+    this.newStand = { name, status: STAND_STATUS_ENABLED }
 
     if (this.standData.id) {
       this.newStand.id = this.standData.id
@@ -51,9 +47,9 @@ export class EditStandComponent implements OnInit {
 
     this.standSrv.upsertStand(this.newStand)
     .then(res => {
-      let message = 'Stand created successfully'
+      let message = 'Mesa creada correctamente'
       if (this.newStand.id) {
-        message = 'Stand updated successfully'
+        message = 'Mesa actualizada correctamente'
       }
 
       this.presentSnackBar(message)
@@ -62,26 +58,13 @@ export class EditStandComponent implements OnInit {
     })
     .catch(err => {
       if (err instanceof AlreadyExist) {
-        this.presentSnackBar('Stand already exist')
+        this.presentSnackBar('La mesa ya existe')
         return  
       }
 
-      this.presentSnackBar('Could not create emloyee')
+      this.presentSnackBar('No pudimos crear la mesa')
       console.error(err)
     })
-  }
-
-  async deleteStand() {
-    const stand = { ...this.standData }
-    
-    try {
-      stand.status = STAND_STATUS_DISABLED
-      await this.standSrv.deleteStand(stand)
-      this.presentSnackBar('Stand has been deleted')
-      this.dialogStandRef.close()
-    } catch (err) {
-      console.error(err)
-    }
   }
  
   presentSnackBar(message: string) {

@@ -10,7 +10,8 @@ import {
   doc,
   query,
   where,
-  getDocs
+  getDocs,
+  orderBy
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
@@ -29,7 +30,11 @@ export class ProductsService {
   }
 
   getProducts() {
-    const docQuery = query(this.productRef, where('status', '==', 'enabled'))
+    const docQuery = query(
+      this.productRef, 
+      where('status', '==', 'enabled'), 
+      orderBy('name')
+    )
     return collectionData(docQuery, {
       idField: 'id'
     }) as Observable<Product[]>

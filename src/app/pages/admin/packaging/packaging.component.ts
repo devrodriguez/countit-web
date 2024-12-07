@@ -6,6 +6,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { Packaging } from 'src/app/interfaces/packaging';
 import { PackagingService } from 'src/app/services/packaging.service';
 import { EditPackagingComponent } from 'src/app/components/edit-packaging/edit-packaging.component';
+import { PACKAGING_STATUS_DISABLED } from 'src/app/helpers/constants/packaging';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ActionConfirmComponent } from 'src/app/components/action-confirm/action-confirm.component';
 
 @Component({
   selector: 'app-packaging',
@@ -13,19 +16,22 @@ import { EditPackagingComponent } from 'src/app/components/edit-packaging/edit-p
   styleUrls: ['./packaging.component.scss']
 })
 export class PackagingComponent {
-  @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
+  @ViewChild(MatPaginator) set matPaginator(paginator: MatPaginator) {
+    this.dataSource.paginator = paginator
+  };
 
   employeesList: Packaging[] | null = null
   displayedColumns: string[] = [
-    'code',
     'name',
     'edit',
+    'remove',
   ];
   dataSource = new MatTableDataSource<Packaging>()
 
   constructor(
     private packagingSrv: PackagingService,
-    private matDialogCtrl: MatDialog
+    private matDialogCtrl: MatDialog,
+    private readonly matSnackBar: MatSnackBar,
   ) {
     this.loadPackaging()
   }
@@ -35,7 +41,6 @@ export class PackagingComponent {
     .subscribe({
       next: data => {
         this.dataSource = new MatTableDataSource<Packaging>(data)
-        this.dataSource.paginator = this.paginator
       },
       error: err => {
         console.error(err)
@@ -43,9 +48,43 @@ export class PackagingComponent {
     })
   }
 
+  async deletePackaging(packaging: Packaging) {
+    try {
+      packaging.status = PACKAGING_STATUS_DISABLED
+      await this.packagingSrv.deletePackaging(packaging)
+      this.presentSnackBar('El ambalaje ha sido eliminado')
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
   showCreatePackaging(packaging: Packaging = {} as Packaging) {
     this.matDialogCtrl.open(EditPackagingComponent, {
       data: packaging
     })
+  }
+
+  showRemove(packaging: Packaging) {
+    this.matDialogCtrl.open(
+      ActionConfirmComponent,
+      {
+        data: {
+          actionName: 'Eliminar embalaje',
+          message: `¿Deseas eliminar el embalaje ${packaging.name}?`
+        }
+      }
+    )
+    .afterClosed()
+    .subscribe(async (isConfirmed: Boolean) => {
+      if(isConfirmed) {
+        await this.deletePackaging(packaging)
+      }
+    })
+  }
+
+  presentSnackBar(message: string) {
+    this.matSnackBar.open(message, undefined, {
+      duration: 3000
+    });
   }
 }

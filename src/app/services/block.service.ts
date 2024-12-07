@@ -1,5 +1,18 @@
 import { Injectable } from '@angular/core';
-import { addDoc, collection, collectionData, CollectionReference, doc, DocumentData, Firestore, getDoc, getDocs, query, updateDoc, where } from '@angular/fire/firestore';
+import {
+  addDoc,
+  collection,
+  collectionData,
+  CollectionReference,
+  doc,
+  DocumentData,
+  Firestore,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+  orderBy
+} from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
 import { Block } from '../interfaces/block';
@@ -17,7 +30,11 @@ export class BlockService {
   }
 
   getBlocks() {
-    const docQuery = query(this.blockRef, where('status', '==', 'enabled'))
+    const docQuery = query(
+      this.blockRef,
+      where('status', '==', 'enabled'),
+      orderBy('name')
+    )
     return collectionData(docQuery, {
       idField: 'id'
     }) as Observable<Block[]>
@@ -61,11 +78,11 @@ export class BlockService {
           ...block
         }
       )
-    } 
+    }
 
     block.createdAt = now
     block.status = BLOCK_STATUS_ENABLED
-    
+
     return addDoc(this.blockRef, block)
   }
 

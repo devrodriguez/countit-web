@@ -28,22 +28,19 @@ export class EditPackagingComponent {
   ){}
 
   ngOnInit(): void {
-    const { code, name } = this.packagingData
+    const { name } = this.packagingData
 
     this.packagingFormGr = this.packagingFormBuilder.group({
-      code: new FormControl(code, [
-        Validators.required, 
-        Validators.minLength(5)]),
       name: new FormControl(name, [
         Validators.required,
-        Validators.minLength(5)
+        Validators.minLength(3)
       ])
     })
   }
 
   packagingFormSubmit() {
-    const { code, name } = this.packagingFormGr.value
-    this.newPackaging = { code, name, status: PACKAGING_STATUS_ENABLED }
+    const { name } = this.packagingFormGr.value
+    this.newPackaging = { name, status: PACKAGING_STATUS_ENABLED }
 
     if (this.packagingData.id) {
       this.newPackaging.id = this.packagingData.id
@@ -51,9 +48,9 @@ export class EditPackagingComponent {
 
     this.packagingSrv.upsertPackaging(this.newPackaging)
     .then(res => {
-      let message = 'Packaging created successfully'
+      let message = 'Embalaje creado correctamente'
       if (this.newPackaging.id) {
-        message = 'Packaging updated successfully'
+        message = 'Embalaje actualizado correctamente'
       }
 
       this.presentSnackBar(message)
@@ -62,26 +59,13 @@ export class EditPackagingComponent {
     })
     .catch(err => {
       if (err instanceof AlreadyExist) {
-        this.presentSnackBar('Packaging with provided code already exist')
+        this.presentSnackBar('El embalaje ya existe')
         return  
       }
 
-      this.presentSnackBar('Could not create packaging')
+      this.presentSnackBar('No se creo el embalaje')
       console.error(err)
     })
-  }
-
-  async deletePackaging() {
-    const packaging = { ...this.packagingData }
-    
-    try {
-      packaging.status = PACKAGING_STATUS_DISABLED
-      await this.packagingSrv.deletePackaging(packaging)
-      this.presentSnackBar('Packaging has been deleted')
-      this.dialogPackagingRef.close()
-    } catch (err) {
-      console.error(err)
-    }
   }
  
   presentSnackBar(message: string) {

@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import { NgForm, FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+
 import { Workpoint } from 'src/app/interfaces/workpoint';
 import { WorkpointService } from 'src/app/services/workpoint.service';
 import { BlockService } from 'src/app/services/block.service';
@@ -11,7 +12,6 @@ import { StandService } from 'src/app/services/stand.service';
 import { Product } from 'src/app/interfaces/product';
 import { Stand } from 'src/app/interfaces/stand';
 import { AlreadyExist } from 'src/app/helpers/errors/alreadyExist';
-import { WORKPOINT_STATUS_DISABLED } from 'src/app/helpers/constants/workpoint';
 
 @Component({
   selector: 'app-edit-workpoint',
@@ -132,19 +132,6 @@ export class EditWorkpointComponent implements OnInit {
 
         console.error(err)
       })
-  }
-
-  async deleteWorkpoint() {
-    const workpoint = { ...this.inputWorkpoint }
-    
-    try {
-      workpoint.status = WORKPOINT_STATUS_DISABLED
-      await this.workpointSrv.deleteWorkpoint(workpoint)
-      this.presentSnackBar('Workpoint has been deleted')
-      this.dialogWorkpointRef.close()
-    } catch (err) {
-      console.error(err)
-    }
   }
 
   presentSnackBar(message: string) {

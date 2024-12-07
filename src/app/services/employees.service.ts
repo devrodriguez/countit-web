@@ -10,7 +10,8 @@ import {
   doc,
   query,
   where,
-  getDocs
+  getDocs,
+  orderBy
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
@@ -29,7 +30,11 @@ export class EmployeesService {
   }
 
   getEmployees() {
-    const docQuery = query(this.employeesRef, where('status', '==', 'enabled'))
+    const docQuery = query(
+      this.employeesRef, 
+      where('status', '==', 'enabled'),
+      orderBy('firstName')
+    )
 
     return collectionData(docQuery, {
       idField: 'id'
@@ -56,10 +61,8 @@ export class EmployeesService {
     const now = new Date().getTime()
 
     const employeeFound = await this.findEmployee(employee)
-
-    if (employeeFound.id) {
+    if (employeeFound !== null) {
       if (employee.id !== employeeFound.id) throw new AlreadyExist()
-      else if (employee.id === employeeFound.id) return
     }
 
     if (employee.id) {
@@ -71,7 +74,8 @@ export class EmployeesService {
           employee.id
         ),
         {
-          ...employee
+          ...employee,
+          productBeds: employee.productBeds 
         }
       )
     }
@@ -83,14 +87,15 @@ export class EmployeesService {
   }
 
   async findEmployee(employee: Employee) {
-    const docQuery = query(this.employeesRef, 
+    const docQuery = query(
+      this.employeesRef, 
       where('firstName', '==', employee.firstName),
-      where('lastName', '==', employee.lastName)
+      where('lastName', '==', employee.lastName),
     )
     const snap = await getDocs(docQuery)
 
     if (snap.docs.length === 0) {
-      return {} as Employee
+      return null
     }
 
     const dataEmp = snap.docs[0].data() as Employee

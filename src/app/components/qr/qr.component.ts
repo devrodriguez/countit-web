@@ -7,7 +7,5 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
   styleUrls: ['./qr.component.scss']
 })
 export class QrComponent {
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any) {
-
-  }
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any) {}
 }

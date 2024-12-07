@@ -1,16 +1,13 @@
+import { Employee } from "./employee"
+import { Packaging } from "./packaging"
+import { Workpoint } from "./workpoint"
+
 export interface Count {
     id: string
     amount: number
-    employeeID: string
-    employeeName: string
-    blockID: string
-    blockName: string
-    standID: string
-    standName: string
-    productID: string
-    productName: string
-    packagingID: string
-    packagingName: string
+    employee: Employee
+    workpoint: Workpoint
+    packaging: Packaging
     createdAt: number
     updatedAt: number
 }

@@ -5,21 +5,21 @@
             <form [formGroup]="authFormGr" #authForm="ngForm" (ngSubmit)="signIn()">
                 <p>
                     <mat-form-field class="full-field">
-                        <mat-label>Code</mat-label>
-                        <input type="email" formControlName="email" matInput>
-                        <mat-error *ngIf="authFormGr.invalid && (authFormGr.controls['email'].dirty || authFormGr.controls['email'].touched)">Email is required</mat-error>
+                        <mat-label>Usuario</mat-label>
+                        <input type="email" formControlName="email" matInput placeholder="micorreo@dominio.com">
+                        <mat-error *ngIf="authFormGr.invalid && (authFormGr.controls['email'].dirty || authFormGr.controls['email'].touched)">El correo es requerido</mat-error>
                     </mat-form-field>
                 </p>
                 <p>
                     <mat-form-field class="full-field">
-                        <mat-label>Name</mat-label>
+                        <mat-label>Contraseña</mat-label>
                         <input type="password" formControlName="password" matInput>
-                        <mat-error *ngIf="authFormGr.invalid && (authFormGr.controls['password'].dirty || authFormGr.controls['password'].touched)">Password is required</mat-error>
+                        <mat-error *ngIf="authFormGr.invalid && (authFormGr.controls['password'].dirty || authFormGr.controls['password'].touched)">La contraseña es requerida</mat-error>
                     </mat-form-field>
                 </p>
                 <p>
                     <button mat-raised-button color="primary" [disabled]="authFormGr.invalid">
-                        Sign In
+                        Ingresar
                     </button>
                 </p>
             </form>

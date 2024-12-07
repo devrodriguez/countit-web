@@ -28,16 +28,12 @@ export class EditProductComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    const { code, name } = this.productDataInput
+    const { name } = this.productDataInput
 
     this.productFormGr = this.productFormBuilder.group({
-      code: new FormControl(code, [
-        Validators.required,
-        Validators.minLength(5)]
-      ),
       name: new FormControl(name, [
         Validators.required,
-        Validators.minLength(5)
+        Validators.minLength(3)
       ])
     })
   }
@@ -50,9 +46,9 @@ export class EditProductComponent implements OnInit {
 
     try {
       await this.productSrv.upsertProduct(this.newProduct)
-      let message = 'Product created successfully'
+      let message = 'Producto creado correctamente'
       if (this.newProduct.id) {
-        message = 'Product updated successfully'
+        message = 'Producto actualizado correctamente'
       }
 
       this.presentSnackBar(message)
@@ -60,24 +56,11 @@ export class EditProductComponent implements OnInit {
       this.dialogProductRef.close()
     } catch (err) {
       if (err instanceof AlreadyExist) {
-        this.presentSnackBar('Product already exist')
+        this.presentSnackBar('El producto ya existe')
         return  
       }
 
-      this.presentSnackBar('Could not create product')
-      console.error(err)
-    }
-  }
-
-  async deleteProduct() {
-    const product = { ...this.productDataInput }
-    
-    try {
-      product.status = PRODUCT_STATUS_DISABLED
-      await this.productSrv.deleteProduct(product)
-      this.dialogProductRef.close()
-      this.presentSnackBar('Product has been deleted')
-    } catch (err) {
+      this.presentSnackBar('No se pudo crear el producto')
       console.error(err)
     }
   }

@@ -18,7 +18,6 @@ export class SingleReportComponent {
     this.dataSource.paginator = paginator
   };
 
-  // @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
   @ViewChild('exporter') exporter: MatTableExporterDirective | null = null;
 
   displayedColumns: string[] = [
@@ -26,6 +25,7 @@ export class SingleReportComponent {
     'stand',
     'employee',
     'product',
+    'stand_amount',
     'packaging',
     'amount',
     'created_at'
@@ -44,12 +44,26 @@ export class SingleReportComponent {
     .subscribe({
       next: counts => {
         this.dataSource = new MatTableDataSource<Count>(counts)
-        // this.dataSource.paginator = this.paginator
+        this.dataSource.filterPredicate = (data: Count, filter: string): boolean => {
+          const dataStr = JSON.stringify(data).toLocaleLowerCase()
+          return dataStr.includes(filter)
+        }
       },
       error: err => {
         console.error(err);
       }
     })
+  }
+
+  getStands(count: Count): number | undefined {
+    const { employee: { productBeds } } = count
+    const { product } = count.workpoint
+
+    if (!productBeds) return 0
+    
+    const productBed = productBeds.find(pb => pb.productName === product.name)
+
+    return productBed?.bedsAmount
   }
 
   applyFilter(event: Event) {

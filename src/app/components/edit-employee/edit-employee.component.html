@@ -14,12 +14,43 @@
                 <mat-error *ngIf="employeeFormGr.invalid && (employeeFormGr.controls['lastName'].dirty || employeeFormGr.controls['lastName'].touched)">Last name is required</mat-error>
             </mat-form-field>
         </p>
+        <div class="product-bed-scrollable">
+            <div formArrayName="productBeds">
+                <div class="product-bed-list" *ngFor="let pb of productBedsFrm.controls; let i = index" [formGroupName]="i">
+                    <mat-form-field appearance="fill" class="product-field">
+                        <input type="text" class="small-input" matInput formControlName="product" readonly="true">
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="stand-field">
+                        <input type="number" class="small-input" matInput maxlength="10" formControlName="amount">
+                    </mat-form-field>
+                    <button type="button" mat-icon-button class="action-button" (click)="deleteProductBeds(i)">
+                        <mat-icon fontIcon="remove"></mat-icon>
+                    </button>
+                </div>
+            </div>    
+        </div>
+        <div class="product-bed-input">
+            <mat-form-field appearance="fill" class="product-field">
+                <mat-label>Variedad</mat-label>
+                <mat-select class="small-input" formControlName="product">
+                    <mat-option *ngFor="let product of products" [value]="product">{{ product.name }}</mat-option>
+                </mat-select>
+                <mat-error>El producto es requerido</mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="stand-field">
+                <mat-label>Camas</mat-label>
+                <input type="number" class="small-input" matInput maxlength="10" formControlName="bedsAmount">
+            </mat-form-field>
+            <button type="button" mat-icon-button class="action-button" (click)="addProductBed()" [disabled]="!allowToAddProductBed">
+                <mat-icon fontIcon="add"></mat-icon>
+            </button>
+        </div>
         <p>
             <button mat-raised-button color="primary" class="mr-10" [disabled]="employeeFormGr.invalid">
-                Save
+                Guardar
             </button>
-            <button mat-raised-button color="secondary" (click)="deleteEmployee()" type="button" *ngIf="employeeData && employeeData.id">
-                Delete
+            <button mat-raised-button color="secondary" (click)="dialogEmployeeRef.close()" type="button" *ngIf="parentData && parentData.id">
+                Cancelar
             </button>
         </p>
     </form>
