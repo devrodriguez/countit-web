@@ -5,14 +5,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { AppUser } from 'src/app/interfaces/auth/app-user';
-import { EditEmployeeComponent } from 'src/app/components/edit-employee/edit-employee.component';
 import { AppUserService } from 'src/app/services/app-user.service';
 import { EditAppUserComponent } from 'src/app/components/edit-app-user/edit-app-user.component';
-import { User } from 'firebase/auth';
 import { ActionConfirmComponent } from 'src/app/components/action-confirm/action-confirm.component';
-import { UserNotFound } from 'src/app/helpers/errors/userNotFound';
-import { Auth } from '@angular/fire/auth';
 import { AuthService } from 'src/app/services/auth.service';
+import { FB_AUTH_USER_NOT_FOUND } from 'src/app/helpers/constants/app-user';
 
 @Component({
   selector: 'app-users',
@@ -64,7 +61,7 @@ export class UsersComponent {
       error: err => {
         console.error(err)
         const { error: { error_code, message } } = err
-        if (error_code === "auth/user-not-found") {
+        if (error_code === FB_AUTH_USER_NOT_FOUND) {
           this.presentSnackBar('Usuario no encontrado')
           return
         }

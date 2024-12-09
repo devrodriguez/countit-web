@@ -1,12 +1,26 @@
 import { Injectable } from '@angular/core';
-import { addDoc, collection, collectionData, CollectionReference, deleteDoc, doc, DocumentData, Firestore, getDocs, orderBy, query, updateDoc, where } from '@angular/fire/firestore'
-import { Auth, User } from '@angular/fire/auth'
+import { 
+  CollectionReference,
+  DocumentData,
+  Firestore,
+  addDoc, 
+  collection, 
+  collectionData, 
+  deleteDoc,
+  doc, 
+  getDocs,  
+  query, 
+  updateDoc, 
+  where,
+  orderBy,
+ } from '@angular/fire/firestore'
 import { AppUser } from '../interfaces/auth/app-user';
 import { Observable } from 'rxjs';
+
 import { AlreadyExist } from '../helpers/errors/alreadyExist';
 import { APP_USER_STATUS_ENABLED } from '../helpers/constants/app-user';
 import { AuthService } from './auth.service';
-import { UserNotFound } from '../helpers/errors/userNotFound';
+import { AuthCredentials } from '../interfaces/auth/credentials';
 
 @Injectable({
   providedIn: 'root'
@@ -61,10 +75,12 @@ export class AppUserService {
       user.uid = uid || ''
     } catch (err) {
       console.error(err)
+      throw err
     }
 
     user.createdAt = now
     user.status = APP_USER_STATUS_ENABLED
+    user.credentials.password = null
 
     return addDoc(this.appUserRef, user)
   }

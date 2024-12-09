@@ -20,7 +20,7 @@ export class EditAppUserComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public inputData: AppUser,
-    public dialogBlockRef: MatDialogRef<EditAppUserComponent>,
+    public readonly dialogBlockRef: MatDialogRef<EditAppUserComponent>,
     private readonly matSnackBar: MatSnackBar,
     private readonly blockFormBuilder: FormBuilder,
     private readonly appUserSrv: AppUserService
@@ -52,13 +52,13 @@ export class EditAppUserComponent implements OnInit {
     this.newAppUser = { 
       name,
       credentials: { 
-        email, 
+        email,
         password
       }
-    }
+    } as AppUser
 
-    if (this.newAppUser.id) {
-      this.newAppUser.id = this.newAppUser.id
+    if (this.inputData.id) {
+      this.newAppUser.id = this.inputData.id
     }
 
     this.appUserSrv.upsertAppUser(this.newAppUser)
@@ -74,11 +74,11 @@ export class EditAppUserComponent implements OnInit {
     })
     .catch(err => {
       if (err instanceof AlreadyExist) {
-        this.presentSnackBar('El bloque ya existe')
+        this.presentSnackBar('El usuario ya existe, ingrese un correo diferente')
         return  
       }
 
-      this.presentSnackBar('No se pudo crear el usuario')
+      this.presentSnackBar('No se pudo crear el usuario, intente nuevamente')
       console.error(err)
     })
   }

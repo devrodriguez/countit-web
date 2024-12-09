@@ -7,12 +7,15 @@ import {
   onAuthStateChanged,
   User, 
   browserSessionPersistence,
+  updateProfile,
 } from '@angular/fire/auth';
 import { collection, CollectionReference, DocumentData, Firestore } from '@angular/fire/firestore'
 import { HttpClient } from '@angular/common/http';
 
 import { AuthCredentials } from '../interfaces/auth/credentials';
 import { AppUser } from '../interfaces/auth/app-user';
+import { AlreadyExist } from '../helpers/errors/alreadyExist';
+import { FB_AUTH_EMAIL_ALREADY_IN_USE } from '../helpers/constants/app-user';
 
 const apiURLDeleteUser = 'https://deleteauthuser-xzkfsurz5q-uc.a.run.app'
 
@@ -34,19 +37,28 @@ export class AuthService {
     })
   }
 
-  async register({ credentials, roles }: AppUser) {
-    const { email, password } = credentials
+  async register(appUser: AppUser) {
+    const { 
+      name,
+      credentials: { email, password } 
+    } = appUser
 
     try {
       const userCred = await createUserWithEmailAndPassword(this.auth, email, password)
-      const { user: { uid } } = userCred;
+      const { user } = userCred
+      const { uid } = user
+      await updateProfile(user, { displayName: appUser.name })
 
       return uid
     } catch (err) {
-      console.log(err)
-    }
+      console.log(JSON.stringify(err))
+      
+      if (err.code === FB_AUTH_EMAIL_ALREADY_IN_USE) {
+        throw new AlreadyExist()
+      }
 
-    return null
+      throw err
+    }
   }
 
   deleteUser(uid: string) {
@@ -58,9 +70,8 @@ export class AuthService {
   }
 
   async signIn({ email, password }: AuthCredentials) {
-    return this.auth.setPersistence(browserSessionPersistence)
-    .then(() => signInWithEmailAndPassword(this.auth, email, password))
-    
+    await this.auth.setPersistence(browserSessionPersistence)
+    await signInWithEmailAndPassword(this.auth, email, password)
   }
 
   signOut() {

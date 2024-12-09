@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 
 import { AuthService } from 'src/app/services/auth.service';
@@ -15,6 +16,7 @@ export class SigninComponent implements OnInit {
   constructor(
     private router: Router,
     private readonly authFormBuilder: FormBuilder,
+    private readonly matSnackBarCtrl: MatSnackBar,
     private authSrv: AuthService,
   ) {
 
@@ -44,9 +46,10 @@ export class SigninComponent implements OnInit {
 
     try {
       await this.authSrv.signIn({ email, password })
-      this.router.navigateByUrl('admin', { replaceUrl: true })
+      await this.router.navigateByUrl('admin', { replaceUrl: true })
     } catch (err) {
       console.error(err)
+      this.presentSnackBar('No pudiste iniciar sesion, intentalo de nuevo')
     }
   }
 
@@ -56,5 +59,11 @@ export class SigninComponent implements OnInit {
     } catch (err) {
       console.error(err)
     }
+  }
+
+  presentSnackBar(message: string) {
+    this.matSnackBarCtrl.open(message, undefined, {
+      duration: 3000
+    });
   }
 }

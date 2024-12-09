@@ -16,7 +16,7 @@ export const deleteAuthUser = onRequest({ cors: true, timeoutSeconds: 540 }, asy
     const { query: { uid } } = req
 
     try {
-        await admin.auth().deleteUser(`${uid}`)
+        await admin.auth().deleteUser(uid.toString())
         res.json({ message: 'user deleted' })
     } catch (err) {
         console.error(err)

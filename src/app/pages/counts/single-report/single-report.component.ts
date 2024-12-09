@@ -28,7 +28,8 @@ export class SingleReportComponent {
     'stand_amount',
     'packaging',
     'amount',
-    'created_at'
+    'created_at',
+    'created_by',
   ];
 
   public counts!: Count[]
