@@ -10,6 +10,7 @@ import { EditEmployeeComponent } from 'src/app/components/edit-employee/edit-emp
 import { ActionConfirmComponent } from 'src/app/components/action-confirm/action-confirm.component';
 import { EMPLOYEE_STATUS_DISABLED } from 'src/app/helpers/constants/employee';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { convertBase64ToBlob } from 'src/app/helpers/converter/images';
 
 @Component({
   selector: 'app-employees',
@@ -28,6 +29,7 @@ export class EmployeesComponent {
     'edit',
     'qr',
     'print',
+    'download',
     'remove'
   ];
   dataSource = new MatTableDataSource<Employee>()
@@ -104,6 +106,23 @@ export class EmployeesComponent {
       qrWindow?.print()
       qrWindow?.close()
     }, 100) 
+  }
+
+  downloadQR(code: any) {
+    const { qrcElement: { nativeElement } } = code
+    const imgs = nativeElement.getElementsByTagName('img')
+    const [fimg] = imgs
+    const { src } = fimg
+    const codeBlob = convertBase64ToBlob(src)
+
+    const blob = new Blob([codeBlob], { type: "image/png" })
+    const url = window.URL.createObjectURL(blob)
+    const link = document.createElement("a")
+    link.href = url
+    // name of the file
+    link.download = "employee"
+    link.click()
+    link.remove()
   }
 
   presentSnackBar(message: string) {
