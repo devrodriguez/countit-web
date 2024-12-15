@@ -2,14 +2,16 @@ import { Component, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import {  } from 'angularx-qrcode'
 
 import { QrComponent } from 'src/app/components/qr/qr.component';
 import { Workpoint } from 'src/app/interfaces/workpoint';
 import { WorkpointService } from 'src/app/services/workpoint.service';
 import { EditWorkpointComponent } from 'src/app/components/edit-workpoint/edit-workpoint.component';
 import { WORKPOINT_STATUS_DISABLED } from 'src/app/helpers/constants/workpoint';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActionConfirmComponent } from 'src/app/components/action-confirm/action-confirm.component';
+import { convertBase64ToBlob } from 'src/app/helpers/converter/images';
 
 @Component({
   selector: 'app-workpoint',
@@ -29,6 +31,7 @@ export class WorkpointComponent {
     'edit',
     'qr',
     'print',
+    'download',
     'remove',
   ];
   dataSource = new MatTableDataSource<Workpoint>()
@@ -111,5 +114,22 @@ export class WorkpointComponent {
     this.matSnackBar.open(message, undefined, {
       duration: 3000
     });
+  }
+
+  downloadQR(code: any) {
+    const { qrcElement: { nativeElement } } = code
+    const imgs = nativeElement.getElementsByTagName('img')
+    const [fimg] = imgs
+    const { src } = fimg
+    const codeBlob = convertBase64ToBlob(src)
+
+    const blob = new Blob([codeBlob], { type: "image/png" })
+    const url = window.URL.createObjectURL(blob)
+    const link = document.createElement("a")
+    link.href = url
+    // name of the file
+    link.download = "workpoint"
+    link.click()
+    link.remove()
   }
 }
