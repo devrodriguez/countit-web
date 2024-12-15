@@ -49,6 +49,8 @@ import { EditBlockComponent } from './components/edit-block/edit-block.component
 import { EditStandComponent } from './components/edit-stand/edit-stand.component';
 import { EditPackagingComponent } from './components/edit-packaging/edit-packaging.component';
 import { ActionConfirmComponent } from './components/action-confirm/action-confirm.component';
+import { UsersComponent } from './pages/admin/users/users.component';
+import { EditAppUserComponent } from './components/edit-app-user/edit-app-user.component';
 
 @NgModule({
   declarations: [
@@ -70,7 +72,9 @@ import { ActionConfirmComponent } from './components/action-confirm/action-confi
     EditBlockComponent,
     EditStandComponent,
     EditPackagingComponent,
-    ActionConfirmComponent
+    ActionConfirmComponent,
+    UsersComponent,
+    EditAppUserComponent
   ],
   imports: [
     BrowserModule,

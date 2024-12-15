@@ -6,7 +6,6 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AlreadyExist } from 'src/app/helpers/errors/alreadyExist';
 import { Block } from 'src/app/interfaces/block';
 import { BlockService } from 'src/app/services/block.service';
-import { BLOCK_STATUS_DISABLED } from 'src/app/helpers/constants/block';
 
 @Component({
   selector: 'app-edit-block',
@@ -62,7 +61,7 @@ export class EditBlockComponent implements OnInit {
         return  
       }
 
-      this.presentSnackBar('No se pudo eliminar el bloque')
+      this.presentSnackBar('No se pudo crear el bloque')
       console.error(err)
     })
   }

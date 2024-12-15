@@ -1,0 +1,39 @@
+<section class="container">
+    <form [formGroup]="appUserFormGr" #appUserForm="ngForm" (ngSubmit)="appUserFormSubmit()">
+        <p>
+            <mat-form-field class="full-field">
+                <mat-label>Nombre</mat-label>
+                <input type="text" formControlName="name" matInput>
+                <mat-error
+                    *ngIf="appUserFormGr.invalid && (appUserFormGr.controls['name'].dirty || appUserFormGr.controls['name'].touched)">El
+                    nombre es requerido</mat-error>
+            </mat-form-field>
+        </p>
+        <p>
+            <mat-form-field class="full-field">
+                <mat-label>Email</mat-label>
+                <input type="text" formControlName="email" matInput [readonly]="isEditingMode">
+                <mat-error
+                    *ngIf="appUserFormGr.invalid && (appUserFormGr.controls['email'].dirty || appUserFormGr.controls['email'].touched)">El
+                    email es requerido</mat-error>
+            </mat-form-field>
+        </p>
+        <p>
+            <mat-form-field class="full-field">
+                <mat-label>Contraseña</mat-label>
+                <input type="text" formControlName="password" matInput>
+                <mat-error
+                    *ngIf="appUserFormGr.invalid && (appUserFormGr.controls['password'].dirty || appUserFormGr.controls['password'].touched)">La
+                    contraseña es requerida</mat-error>
+            </mat-form-field>
+        </p>
+        <p>
+            <button mat-raised-button color="primary" class="mr-10" [disabled]="appUserFormGr.invalid">
+                Guardar
+            </button>
+            <button mat-raised-button color="secondary" (click)="dialogBlockRef.close()" type="button">
+                Cancelar
+            </button>
+        </p>
+    </form>
+</section>

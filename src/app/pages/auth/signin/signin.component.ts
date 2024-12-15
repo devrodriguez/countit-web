@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 
 import { AuthService } from 'src/app/services/auth.service';
@@ -15,6 +16,7 @@ export class SigninComponent implements OnInit {
   constructor(
     private router: Router,
     private readonly authFormBuilder: FormBuilder,
+    private readonly matSnackBarCtrl: MatSnackBar,
     private authSrv: AuthService,
   ) {
 
@@ -23,14 +25,14 @@ export class SigninComponent implements OnInit {
   ngOnInit(): void {
     this.authFormGr = this.authFormBuilder.group({
       email: new FormControl(
-        '',
+        'john.rodriguez.25@hotmail.com',
         [
           Validators.required,
           Validators.email
         ]
       ),
       password: new FormControl(
-        '',
+        'Erudito.100',
         [
           Validators.required,
           Validators.minLength(5)
@@ -44,9 +46,10 @@ export class SigninComponent implements OnInit {
 
     try {
       await this.authSrv.signIn({ email, password })
-      this.router.navigateByUrl('admin', { replaceUrl: true })
+      await this.router.navigateByUrl('admin', { replaceUrl: true })
     } catch (err) {
       console.error(err)
+      this.presentSnackBar('No pudiste iniciar sesion, intentalo de nuevo')
     }
   }
 
@@ -58,13 +61,9 @@ export class SigninComponent implements OnInit {
     }
   }
 
-  async createUser() {
-    const { email, password } = this.authFormGr.value
-
-    try {
-      await this.authSrv.register({ email, password })
-    } catch (err) {
-      console.error(err)
-    }
+  presentSnackBar(message: string) {
+    this.matSnackBarCtrl.open(message, undefined, {
+      duration: 3000
+    });
   }
 }
