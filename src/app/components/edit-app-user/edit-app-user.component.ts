@@ -31,15 +31,14 @@ export class EditAppUserComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const { name, credentials: { email } = {} } = this.inputData
+    const { firstName, lastName, credentials: { nickname } = {} } = this.inputData
 
     this.appUserFormGr = this.blockFormBuilder.group({
-      name: new FormControl(name, [
+      firstName: new FormControl(firstName, [
         Validators.required,
       ]),
-      email: new FormControl(email, [
+      lastName: new FormControl(lastName, [
         Validators.required,
-        Validators.email
       ]),
       password: new FormControl('', [
         Validators.required,
@@ -48,13 +47,13 @@ export class EditAppUserComponent implements OnInit {
   }
 
   appUserFormSubmit() {
-    const { name, email, password } = this.appUserFormGr.value
+    const { firstName, lastName, password } = this.appUserFormGr.value
     this.newAppUser = { 
-      name,
-      credentials: { 
-        email,
+      firstName,
+      lastName,
+      credentials: {
         password
-      }
+      } 
     } as AppUser
 
     if (this.inputData.id) {

@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms'
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 
+import { UserUnauthorized } from 'src/app/helpers/errors/userUnauthorized';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -17,18 +18,17 @@ export class SigninComponent implements OnInit {
     private router: Router,
     private readonly authFormBuilder: FormBuilder,
     private readonly matSnackBarCtrl: MatSnackBar,
-    private authSrv: AuthService,
+    private readonly authSrv: AuthService,
   ) {
 
   }
 
   ngOnInit(): void {
     this.authFormGr = this.authFormBuilder.group({
-      email: new FormControl(
+      nickname: new FormControl(
         '',
         [
           Validators.required,
-          Validators.email
         ]
       ),
       password: new FormControl(
@@ -42,13 +42,19 @@ export class SigninComponent implements OnInit {
   }
 
   async signIn() {
-    const { email, password } = this.authFormGr.value
+    const { nickname, password } = this.authFormGr.value
 
     try {
-      await this.authSrv.signIn({ email, password })
+      await this.authSrv.signIn(nickname, password)
       await this.router.navigateByUrl('admin', { replaceUrl: true })
     } catch (err) {
       console.error(err)
+      if (err instanceof UserUnauthorized) {
+        this.presentSnackBar('Usuario o contraseña no validos')
+
+        return  
+      }
+
       this.presentSnackBar('No pudiste iniciar sesion, intentalo de nuevo')
     }
   }

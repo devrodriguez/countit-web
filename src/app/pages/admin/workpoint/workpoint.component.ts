@@ -25,6 +25,7 @@ export class WorkpointComponent {
 
   workpointList: Workpoint[] | null = null
   displayedColumns: string[] = [
+    'employee',
     'block',
     'product',
     'stand',

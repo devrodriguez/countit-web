@@ -3,7 +3,6 @@ import {
   CollectionReference,
   DocumentData,
   Firestore,
-  addDoc, 
   collection, 
   collectionData, 
   deleteDoc,
@@ -20,7 +19,6 @@ import { Observable } from 'rxjs';
 import { AlreadyExist } from '../helpers/errors/alreadyExist';
 import { APP_USER_STATUS_ENABLED } from '../helpers/constants/app-user';
 import { AuthService } from './auth.service';
-import { AuthCredentials } from '../interfaces/auth/credentials';
 
 @Injectable({
   providedIn: 'root'
@@ -29,17 +27,17 @@ export class AppUserService {
   private appUserRef: CollectionReference<DocumentData>;
 
   constructor(
-    private readonly firebase: Firestore,
+    private readonly firestore: Firestore,
     private readonly authSrv: AuthService,
   ) {
-    this.appUserRef = collection(this.firebase, 'appUsers')
+    this.appUserRef = collection(this.firestore, 'users')
   }
 
   getAppUsers() {
     const docQuery = query(
       this.appUserRef,
       where('status', '==', 'enabled'),
-      orderBy('name')
+      orderBy('firstName')
     )
     return collectionData(docQuery, {
       idField: 'id'
@@ -47,10 +45,10 @@ export class AppUserService {
   }
 
   async upsertAppUser(user: AppUser) {
+    const { credentials: { nickname }} = user
     const now = new Date().getTime()
 
-    const userFound = await this.findAppUser(user)
-
+    const userFound = await this.findAppUser(nickname)
     if (userFound && userFound.id) {
       if (user.id !== userFound.id) throw new AlreadyExist()
       else if (user.id === userFound.id) return
@@ -70,23 +68,16 @@ export class AppUserService {
       )
     }
 
-    try {
-      const uid = await this.authSrv.register(user)
-      user.uid = uid || ''
-    } catch (err) {
-      console.error(err)
-      throw err
-    }
-
     user.createdAt = now
     user.status = APP_USER_STATUS_ENABLED
-    user.credentials.password = null
 
-    return addDoc(this.appUserRef, user)
+    return this.authSrv.registerUser(user)
   }
 
-  async findAppUser(user: AppUser) {
-    const docQuery = query(this.appUserRef, where('email', '==', user.credentials.email))
+  async findAppUser(nickname: string) {
+    if (!nickname) return null
+    
+    const docQuery = query(this.appUserRef, where('credentials.nickname', '==', nickname))
     const snap = await getDocs(docQuery)
 
     if (snap.docs.length === 0) {

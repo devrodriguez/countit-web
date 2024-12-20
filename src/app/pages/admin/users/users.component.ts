@@ -21,10 +21,10 @@ export class UsersComponent {
     this.dataSource.paginator = paginator
   };
 
-  appUsersList: AppUser[] | null = null
   displayedColumns: string[] = [
-    'name',
-    'email',
+    'firstName',
+    'lastName',
+    'nickname',
     'edit',
     'remove'
   ];
@@ -40,9 +40,10 @@ export class UsersComponent {
   }
 
   loadAppUsers() {
-    this.appUserSrv.getAppUsers().subscribe({
-      next: users => {
-        this.dataSource = new MatTableDataSource<AppUser>(users)
+    this.appUserSrv.getAppUsers()
+    .subscribe({
+      next: data => {
+        this.dataSource = new MatTableDataSource<AppUser>(data)
       },
       error: err => {
         console.error(err)
@@ -53,23 +54,23 @@ export class UsersComponent {
   async deleteAppUser(user: AppUser) {
     const { uid = '' } = user
 
-    this.authSrv.deleteUser(uid).subscribe({
-      next: async () => {
-        await this.appUserSrv.deleteAppUser(user)
-        this.presentSnackBar('Usuario eliminado')
-      },
-      error: err => {
-        console.error(err)
-        const { error: { error_code, message } } = err
-        if (error_code === FB_AUTH_USER_NOT_FOUND) {
-          this.presentSnackBar('Usuario no encontrado')
-          return
+    this.authSrv.deleteUser(uid)
+      .subscribe({
+        next: async () => {
+          await this.appUserSrv.deleteAppUser(user)
+          this.presentSnackBar('Usuario eliminado')
+        },
+        error: err => {
+          console.error(err)
+          const { error: { error_code, message } } = err
+          if (error_code === FB_AUTH_USER_NOT_FOUND) {
+            this.presentSnackBar('Usuario no encontrado')
+            return
+          }
+
+          this.presentSnackBar('Error al eliminar usuario')
         }
-
-        this.presentSnackBar('Error al eliminar usuario')
-      }
-    })
-
+      })
   }
 
   showCreateAppUser(appUser: AppUser = {} as AppUser) {
@@ -84,7 +85,7 @@ export class UsersComponent {
       {
         data: {
           actionName: 'Eliminar usuario',
-          message: `¿Deseas eliminar el usuario ${user.name}?`
+          message: `¿Deseas eliminar el usuario ${user.firstName} ${user.lastName}?`
         }
       }
     )

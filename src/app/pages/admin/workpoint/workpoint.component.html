@@ -4,6 +4,10 @@
     </section>
     <section *ngIf="dataSource.data.length">
         <table mat-table [dataSource]="dataSource">
+            <ng-container matColumnDef="employee">
+                <th mat-header-cell *matHeaderCellDef>Empleado</th>
+                <td mat-cell *matCellDef="let workpoint">{{ workpoint?.employee?.firstName }}  {{ workpoint?.employee?.lastName }}</td>
+            </ng-container>
             <ng-container matColumnDef="block">
                 <th mat-header-cell *matHeaderCellDef>Bloque</th>
                 <td mat-cell *matCellDef="let workpoint">{{ workpoint.block.name }}</td>

@@ -84,12 +84,13 @@ export class WorkpointService {
   }
 
   async findWorkpoint(workpoint: Workpoint) {
-    const { block, product, stand } = workpoint
+    const { block, product, stand, employee } = workpoint
     const docQuery = query(
       this.workpointRef, 
-      where('block.name', '==', block.name),
-      where('product.name', '==', product.name),
-      where('stand.name', '==', stand.name),
+      where('block.id', '==', block.id),
+      where('product.id', '==', product.id),
+      where('stand.id', '==', stand.id),
+      where('employee.id', '==', employee.id),
     )
     const snap = await getDocs(docQuery)
 

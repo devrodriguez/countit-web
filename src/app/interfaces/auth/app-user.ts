@@ -4,6 +4,9 @@ export interface AppUser {
     id?: string
     uid?: string
     name: string
+    firstName: string
+    lastName: string
+    email: string
     roles?: string[]
     status?: string
     createdAt?: number

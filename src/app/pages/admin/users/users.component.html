@@ -4,13 +4,17 @@
     </section>
     <section *ngIf="dataSource.data.length">
         <table mat-table [dataSource]="dataSource">
-            <ng-container matColumnDef="name">
+            <ng-container matColumnDef="firstName">
                 <th mat-header-cell *matHeaderCellDef>Nombre</th>
-                <td mat-cell *matCellDef="let appUser">{{ appUser.name }}</td>
+                <td mat-cell *matCellDef="let appUser">{{ appUser.firstName }}</td>
             </ng-container>
-            <ng-container matColumnDef="email">
-                <th mat-header-cell *matHeaderCellDef>Email</th>
-                <td mat-cell *matCellDef="let appUser">{{ appUser.credentials.email }}</td>
+            <ng-container matColumnDef="lastName">
+                <th mat-header-cell *matHeaderCellDef>Apellido</th>
+                <td mat-cell *matCellDef="let appUser">{{ appUser.lastName }}</td>
+            </ng-container>
+            <ng-container matColumnDef="nickname">
+                <th mat-header-cell *matHeaderCellDef>Usuario</th>
+                <td mat-cell *matCellDef="let appUser">{{ appUser.credentials.nickname }}</td>
             </ng-container>
             <ng-container matColumnDef="edit">
                 <th mat-header-cell *matHeaderCellDef></th>

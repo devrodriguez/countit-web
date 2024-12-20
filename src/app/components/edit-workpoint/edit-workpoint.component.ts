@@ -12,6 +12,8 @@ import { StandService } from 'src/app/services/stand.service';
 import { Product } from 'src/app/interfaces/product';
 import { Stand } from 'src/app/interfaces/stand';
 import { AlreadyExist } from 'src/app/helpers/errors/alreadyExist';
+import { Employee } from 'src/app/interfaces/employee';
+import { EmployeesService } from 'src/app/services/employees.service';
 
 @Component({
   selector: 'app-edit-workpoint',
@@ -24,10 +26,12 @@ export class EditWorkpointComponent implements OnInit {
   blocks: Block[] = [] as Block[]
   products: Product[] = [] as Product[]
   stands: Stand[] = [] as Stand[]
+  employees: Employee[] = [] as Employee[]
 
   selectedBlock!: Block
   selectedProduct!: Product
   selectedStand!: Stand
+  selectedEmployee: Employee
 
   private newWorkpoint: Workpoint = {} as Workpoint
   public workpointFormGr!: FormGroup
@@ -40,23 +44,29 @@ export class EditWorkpointComponent implements OnInit {
     private readonly workpointSrv: WorkpointService,
     private readonly blocksSrv: BlockService,
     private readonly productSrv: ProductsService,
-    private readonly stantsSrv: StandService
+    private readonly stantsSrv: StandService,
+    private readonly employeesSrv: EmployeesService
   ) {
 
   }
 
   ngOnInit(): void {
-    const { block, product, stand } = this.inputWorkpoint
+    const { block, product, stand, employee } = this.inputWorkpoint
 
+    this.selectedEmployee = employee
     this.selectedBlock = block
     this.selectedProduct = product
     this.selectedStand = stand
 
+    this.loadEmployees()
     this.loadBlocks()
     this.loadProducts()
     this.loadStands()
 
     this.workpointFormGr = this.workpointFormBuilder.group({
+      employee: new FormControl('', [
+        Validators.required,
+      ]),
       block: new FormControl('', [
         Validators.required,
       ]),
@@ -67,6 +77,18 @@ export class EditWorkpointComponent implements OnInit {
         Validators.required,
       ]),
     })
+  }
+
+  loadEmployees() {
+    this.employeesSrv.getEmployees()
+      .subscribe({
+        next: res => {
+          this.employees = res
+        },
+        error: err => {
+          console.error(err)
+        }
+      })
   }
 
   loadBlocks() {
@@ -106,8 +128,11 @@ export class EditWorkpointComponent implements OnInit {
   }
 
   submitWorkpointForm() {
-    const { block, product, stand } = this.workpointForm.value
-    this.newWorkpoint = { block, product, stand }
+    const { block, product, stand, employee } = this.workpointForm.value
+    const { id, firstName, lastName, productBeds } = employee
+    const lightEmployee = { id, firstName, lastName, productBeds }
+
+    this.newWorkpoint = { block, product, stand, employee: lightEmployee } as Workpoint
 
     if (this.inputWorkpoint.id) {
       this.newWorkpoint.id = this.inputWorkpoint.id
@@ -138,6 +163,10 @@ export class EditWorkpointComponent implements OnInit {
     this.matSnackBar.open(message, undefined, {
       duration: 3000
     });
+  }
+
+  compareEmployee(x: Employee, y: Employee) {
+    return x && y ? x.firstName === y.firstName && x.lastName === y.lastName : x === y;
   }
 
   compareBlock(x: Block, y: Block) {
