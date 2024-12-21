@@ -74,7 +74,6 @@ export class BlockComponent {
 
   async deleteBlock(block: Block) {    
     try {
-      block.status = BLOCK_STATUS_DISABLED
       await this.blockSrv.deleteBlock(block)
       this.presentSnackBar('Bloque eliminado')
     } catch (err) {

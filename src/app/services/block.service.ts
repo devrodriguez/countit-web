@@ -17,7 +17,7 @@ import { Observable } from 'rxjs';
 
 import { Block } from '../interfaces/block';
 import { AlreadyExist } from '../helpers/errors/alreadyExist';
-import { BLOCK_STATUS_ENABLED } from '../helpers/constants/block';
+import { BLOCK_STATUS_DISABLED, BLOCK_STATUS_ENABLED } from '../helpers/constants/block';
 
 @Injectable({
   providedIn: 'root'
@@ -45,6 +45,7 @@ export class BlockService {
   }
 
   deleteBlock(block: Block) {
+    block.status = BLOCK_STATUS_DISABLED
     return updateDoc(
       doc(
         this.blockRef,

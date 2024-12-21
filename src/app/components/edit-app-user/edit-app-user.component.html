@@ -12,16 +12,16 @@
         <p>
             <mat-form-field class="full-field">
                 <mat-label>Apellido</mat-label>
-                <input type="text" formControlName="lastName" matInput [readonly]="isEditingMode">
+                <input type="text" formControlName="lastName" matInput>
                 <mat-error
                     *ngIf="appUserFormGr.invalid && (appUserFormGr.controls['lastName'].dirty || appUserFormGr.controls['lastName'].touched)">El
                     apellido es requerido</mat-error>
             </mat-form-field>
         </p>
         <p>
-            <mat-form-field class="full-field">
+            <mat-form-field class="full-field" *ngIf="!inputData.id">
                 <mat-label>Contraseña</mat-label>
-                <input type="password" formControlName="password" matInput>
+                <input type="text" formControlName="password" matInput>
                 <mat-error
                     *ngIf="appUserFormGr.invalid && (appUserFormGr.controls['password'].dirty || appUserFormGr.controls['password'].touched)">La
                     contraseña es requerida</mat-error>

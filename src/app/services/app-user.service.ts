@@ -14,7 +14,7 @@ import {
   orderBy,
  } from '@angular/fire/firestore'
 import { AppUser } from '../interfaces/auth/app-user';
-import { Observable } from 'rxjs';
+import { last, Observable } from 'rxjs';
 
 import { AlreadyExist } from '../helpers/errors/alreadyExist';
 import { APP_USER_STATUS_ENABLED } from '../helpers/constants/app-user';
@@ -37,18 +37,17 @@ export class AppUserService {
     const docQuery = query(
       this.appUserRef,
       where('status', '==', 'enabled'),
-      orderBy('firstName')
+      orderBy('firstName'),
     )
     return collectionData(docQuery, {
-      idField: 'id'
+      idField: 'id',
     }) as Observable<AppUser[]>
   }
 
   async upsertAppUser(user: AppUser) {
-    const { credentials: { nickname }} = user
     const now = new Date().getTime()
 
-    const userFound = await this.findAppUser(nickname)
+    const userFound = await this.findAppUser(user)
     if (userFound && userFound.id) {
       if (user.id !== userFound.id) throw new AlreadyExist()
       else if (user.id === userFound.id) return
@@ -63,7 +62,9 @@ export class AppUserService {
           user.id
         ),
         {
-          ...user
+          firstName: user.firstName,
+          lastName: user.lastName,
+          updatedAt: new Date().getTime()
         }
       )
     }
@@ -74,10 +75,13 @@ export class AppUserService {
     return this.authSrv.registerUser(user)
   }
 
-  async findAppUser(nickname: string) {
-    if (!nickname) return null
+  async findAppUser(user: AppUser) {
+    const { firstName, lastName } = user
     
-    const docQuery = query(this.appUserRef, where('credentials.nickname', '==', nickname))
+    const docQuery = query(
+      this.appUserRef, 
+      where('firstName', '==', firstName),
+      where('lastName', '==', lastName))
     const snap = await getDocs(docQuery)
 
     if (snap.docs.length === 0) {

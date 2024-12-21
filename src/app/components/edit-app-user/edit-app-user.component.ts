@@ -40,10 +40,12 @@ export class EditAppUserComponent implements OnInit {
       lastName: new FormControl(lastName, [
         Validators.required,
       ]),
-      password: new FormControl('', [
-        Validators.required,
-      ]),
+      password: new FormControl(''),
     })
+
+    if (!this.inputData.id) {
+      this.appUserFormGr.get('password').setValidators(Validators.required)
+    }
   }
 
   appUserFormSubmit() {
@@ -51,13 +53,17 @@ export class EditAppUserComponent implements OnInit {
     this.newAppUser = { 
       firstName,
       lastName,
-      credentials: {
-        password
-      } 
     } as AppUser
 
     if (this.inputData.id) {
       this.newAppUser.id = this.inputData.id
+      this.newAppUser.credentials = {
+        nickname : this.inputData.credentials.nickname
+      }
+    } else {
+      this.newAppUser.credentials = {
+        password
+      }
     }
 
     this.appUserSrv.upsertAppUser(this.newAppUser)
@@ -73,7 +79,7 @@ export class EditAppUserComponent implements OnInit {
     })
     .catch(err => {
       if (err instanceof AlreadyExist) {
-        this.presentSnackBar('El usuario ya existe, ingrese un correo diferente')
+        this.presentSnackBar('El usuario ya existe')
         return  
       }
 

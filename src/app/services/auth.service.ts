@@ -19,6 +19,7 @@ const apiURLGetUserToken = 'https://generateusertoken-xzkfsurz5q-uc.a.run.app'
 const apiURLValidateUserToken = 'https://validateusertoken-xzkfsurz5q-uc.a.run.app'
 const apiURLLoginUser = 'https://loginuser-xzkfsurz5q-uc.a.run.app'
 const apiURLRegisterUser = 'https://registeruser-xzkfsurz5q-uc.a.run.app'
+const apiURLUpdatePassword = 'https://updatepassword-xzkfsurz5q-uc.a.run.app'
 
 @Injectable({
   providedIn: 'root'
@@ -74,7 +75,8 @@ export class AuthService {
       this.setToken(token)
 
       await this.auth.setPersistence(browserSessionPersistence)
-      await signInWithCustomToken(this.auth, token)
+      const userCred = await signInWithCustomToken(this.auth, token)
+      userCred.user.getIdToken()
     } catch (err) {
       console.error(err)
       if (err.status === 401) {
@@ -133,6 +135,9 @@ export class AuthService {
       console.error(err)
       throw new Error('error validating user')
     }
-    
+  }
+
+  changePassword(uid: string, password: string) {
+    return this.http.post(apiURLUpdatePassword, { uid, password })
   }
 }

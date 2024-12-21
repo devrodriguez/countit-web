@@ -1,4 +1,4 @@
 export interface AuthCredentials {
-    nickname: string
+    nickname?: string
     password?: string
 }

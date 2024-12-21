@@ -16,6 +16,16 @@
                 <th mat-header-cell *matHeaderCellDef>Usuario</th>
                 <td mat-cell *matCellDef="let appUser">{{ appUser.credentials.nickname }}</td>
             </ng-container>
+            <ng-container matColumnDef="password">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let appUser">
+                    <mat-icon 
+                    aria-hidden="false" aria-label="" 
+                    fontIcon="password"
+                    class="row-icon"
+                    (click)="showChangePassword(appUser)"></mat-icon>
+                </td>
+            </ng-container>
             <ng-container matColumnDef="edit">
                 <th mat-header-cell *matHeaderCellDef></th>
                 <td mat-cell *matCellDef="let appUser">

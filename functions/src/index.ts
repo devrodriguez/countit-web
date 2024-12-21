@@ -53,8 +53,6 @@ export const registerUser = onRequest({ cors: true, timeoutSeconds: 540 }, async
         const saltRounds = await genSalt(10)
         const hashedPassword = await hash(password, saltRounds);
 
-        console.log('nickname', nickname)
-
         const newUserDoc = await admin.firestore()
             .collection("users")
             .add({
@@ -80,6 +78,30 @@ export const registerUser = onRequest({ cors: true, timeoutSeconds: 540 }, async
     } catch (error) {
         console.error("error on user registry", error);
         res.status(500).json({ error: "error on user registry" });
+    }
+})
+
+export const updatePassword = onRequest({ cors: true, timeoutSeconds: 540 }, async (req, res) => {
+    if (req.method !== 'POST') {
+        res.status(400).json({ message: 'method is not valid' })
+    }
+    
+    const { uid, password } = req.body
+
+    if (!uid || !password) {
+        res.status(400).json({ error: "not valid body" });
+    }
+
+    try {
+        const saltRounds = await genSalt(10)
+        const hashedPassword = await hash(password, saltRounds);
+        const docRef = admin.firestore().collection('users').doc(uid)
+        await docRef.update({ 'credentials.password': hashedPassword })
+        
+        res.status(200).json({ message: 'password updated' })
+    } catch (err) {
+        console.error("error on update password", err);
+        res.status(500).json({ error: "error on update password" });
     }
 })
 
@@ -142,14 +164,14 @@ export const generateUserToken = onRequest({ cors: true, timeoutSeconds: 540 }, 
 })
 
 export const validateUserToken = onRequest({ cors: true, timeoutSeconds: 540 }, async (req, res) => {
-    const token = req.headers.authorization?.split('Bearer ')[1]
+    const tokenId = req.headers.authorization?.split('Bearer ')[1]
 
-    if (!token) {
-        res.status(401).json({ error: 'no token provided' })
+    if (!tokenId) {
+        res.status(401).json({ error: 'token id not provided' })
     }
 
     try {
-        const decoded = await admin.auth().verifyIdToken(token)
+        const decoded = await admin.auth().verifyIdToken(tokenId)
         res.status(200).json({
             uid: decoded.uid
         })
@@ -164,14 +186,17 @@ export const ping = onRequest(async (req, res) => {
 });
 
 async function buildNickname(firstName: string, lastName: string): Promise<string> {
-    const normalLastName = lastName.toLowerCase().replace(/\s+/g, '')
     let nickname = ''
     let exist = true
     let attempt = 0
 
+    const firstNameSp = firstName.split(' ')[0]
+    const lastNameSp = lastName.split(' ')[0]
+    const normalLastName = lastNameSp.toLowerCase().replace(/\s+/g, '')
+
     while (exist) {
-        if (attempt < firstName.length) {
-            const currentLetter = firstName[attempt].toLowerCase()
+        if (attempt < firstNameSp.length) {
+            const currentLetter = firstNameSp[attempt].toLowerCase()
             nickname = `${currentLetter}${normalLastName}`
         } else {
             nickname = `${normalLastName[0]}${normalLastName}`
