@@ -3,23 +3,23 @@
         <p>
             <mat-form-field class="full-field">
                 <mat-label>Nombre</mat-label>
-                <input type="text" formControlName="name" matInput>
+                <input type="text" formControlName="firstName" matInput>
                 <mat-error
-                    *ngIf="appUserFormGr.invalid && (appUserFormGr.controls['name'].dirty || appUserFormGr.controls['name'].touched)">El
+                    *ngIf="appUserFormGr.invalid && (appUserFormGr.controls['firstName'].dirty || appUserFormGr.controls['firstName'].touched)">El
                     nombre es requerido</mat-error>
             </mat-form-field>
         </p>
         <p>
             <mat-form-field class="full-field">
-                <mat-label>Email</mat-label>
-                <input type="text" formControlName="email" matInput [readonly]="isEditingMode">
+                <mat-label>Apellido</mat-label>
+                <input type="text" formControlName="lastName" matInput>
                 <mat-error
-                    *ngIf="appUserFormGr.invalid && (appUserFormGr.controls['email'].dirty || appUserFormGr.controls['email'].touched)">El
-                    email es requerido</mat-error>
+                    *ngIf="appUserFormGr.invalid && (appUserFormGr.controls['lastName'].dirty || appUserFormGr.controls['lastName'].touched)">El
+                    apellido es requerido</mat-error>
             </mat-form-field>
         </p>
         <p>
-            <mat-form-field class="full-field">
+            <mat-form-field class="full-field" *ngIf="!inputData.id">
                 <mat-label>Contraseña</mat-label>
                 <input type="text" formControlName="password" matInput>
                 <mat-error

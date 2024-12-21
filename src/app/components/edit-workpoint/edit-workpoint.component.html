@@ -2,6 +2,15 @@
     <form [formGroup]="workpointFormGr" #workpointForm="ngForm" (ngSubmit)="submitWorkpointForm()">
         <p>
             <mat-form-field class="full-field">
+                <mat-label>Empleado</mat-label>
+                <mat-select formControlName="employee" [(ngModel)]="selectedEmployee" [compareWith]="compareEmployee">
+                    <mat-option *ngFor="let employee of employees" [value]="employee">{{ employee.firstName }} {{ employee.lastName}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="workpointFormGr.invalid && (workpointFormGr.controls['block'].dirty || workpointFormGr.controls['block'].touched)">Block is required</mat-error>
+            </mat-form-field>
+        </p>
+        <p>
+            <mat-form-field class="full-field">
                 <mat-label>Bloque</mat-label>
                 <mat-select formControlName="block" [(ngModel)]="selectedBlock" [compareWith]="compareBlock">
                     <mat-option *ngFor="let block of blocks" [value]="block">{{ block.name }}</mat-option>

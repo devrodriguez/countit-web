@@ -3,7 +3,6 @@ import {
   CollectionReference,
   DocumentData,
   Firestore,
-  addDoc, 
   collection, 
   collectionData, 
   deleteDoc,
@@ -15,12 +14,11 @@ import {
   orderBy,
  } from '@angular/fire/firestore'
 import { AppUser } from '../interfaces/auth/app-user';
-import { Observable } from 'rxjs';
+import { last, Observable } from 'rxjs';
 
 import { AlreadyExist } from '../helpers/errors/alreadyExist';
 import { APP_USER_STATUS_ENABLED } from '../helpers/constants/app-user';
 import { AuthService } from './auth.service';
-import { AuthCredentials } from '../interfaces/auth/credentials';
 
 @Injectable({
   providedIn: 'root'
@@ -29,20 +27,20 @@ export class AppUserService {
   private appUserRef: CollectionReference<DocumentData>;
 
   constructor(
-    private readonly firebase: Firestore,
+    private readonly firestore: Firestore,
     private readonly authSrv: AuthService,
   ) {
-    this.appUserRef = collection(this.firebase, 'appUsers')
+    this.appUserRef = collection(this.firestore, 'users')
   }
 
   getAppUsers() {
     const docQuery = query(
       this.appUserRef,
       where('status', '==', 'enabled'),
-      orderBy('name')
+      orderBy('firstName'),
     )
     return collectionData(docQuery, {
-      idField: 'id'
+      idField: 'id',
     }) as Observable<AppUser[]>
   }
 
@@ -50,7 +48,6 @@ export class AppUserService {
     const now = new Date().getTime()
 
     const userFound = await this.findAppUser(user)
-
     if (userFound && userFound.id) {
       if (user.id !== userFound.id) throw new AlreadyExist()
       else if (user.id === userFound.id) return
@@ -65,28 +62,26 @@ export class AppUserService {
           user.id
         ),
         {
-          ...user
+          firstName: user.firstName,
+          lastName: user.lastName,
+          updatedAt: new Date().getTime()
         }
       )
     }
 
-    try {
-      const uid = await this.authSrv.register(user)
-      user.uid = uid || ''
-    } catch (err) {
-      console.error(err)
-      throw err
-    }
-
     user.createdAt = now
     user.status = APP_USER_STATUS_ENABLED
-    user.credentials.password = null
 
-    return addDoc(this.appUserRef, user)
+    return this.authSrv.registerUser(user)
   }
 
   async findAppUser(user: AppUser) {
-    const docQuery = query(this.appUserRef, where('email', '==', user.credentials.email))
+    const { firstName, lastName } = user
+    
+    const docQuery = query(
+      this.appUserRef, 
+      where('firstName', '==', firstName),
+      where('lastName', '==', lastName))
     const snap = await getDocs(docQuery)
 
     if (snap.docs.length === 0) {

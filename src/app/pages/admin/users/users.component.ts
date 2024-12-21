@@ -10,6 +10,7 @@ import { EditAppUserComponent } from 'src/app/components/edit-app-user/edit-app-
 import { ActionConfirmComponent } from 'src/app/components/action-confirm/action-confirm.component';
 import { AuthService } from 'src/app/services/auth.service';
 import { FB_AUTH_USER_NOT_FOUND } from 'src/app/helpers/constants/app-user';
+import { EditUserPasswordComponent } from 'src/app/components/edit-user-password/edit-user-password.component';
 
 @Component({
   selector: 'app-users',
@@ -21,10 +22,11 @@ export class UsersComponent {
     this.dataSource.paginator = paginator
   };
 
-  appUsersList: AppUser[] | null = null
   displayedColumns: string[] = [
-    'name',
-    'email',
+    'firstName',
+    'lastName',
+    'nickname',
+    'password',
     'edit',
     'remove'
   ];
@@ -40,9 +42,10 @@ export class UsersComponent {
   }
 
   loadAppUsers() {
-    this.appUserSrv.getAppUsers().subscribe({
-      next: users => {
-        this.dataSource = new MatTableDataSource<AppUser>(users)
+    this.appUserSrv.getAppUsers()
+    .subscribe({
+      next: data => {
+        this.dataSource = new MatTableDataSource<AppUser>(data)
       },
       error: err => {
         console.error(err)
@@ -51,30 +54,26 @@ export class UsersComponent {
   }
 
   async deleteAppUser(user: AppUser) {
-    const { uid = '' } = user
-
-    this.authSrv.deleteUser(uid).subscribe({
-      next: async () => {
-        await this.appUserSrv.deleteAppUser(user)
-        this.presentSnackBar('Usuario eliminado')
-      },
-      error: err => {
-        console.error(err)
-        const { error: { error_code, message } } = err
-        if (error_code === FB_AUTH_USER_NOT_FOUND) {
-          this.presentSnackBar('Usuario no encontrado')
-          return
-        }
-
-        this.presentSnackBar('Error al eliminar usuario')
-      }
-    })
-
+    try {
+      await this.appUserSrv.deleteAppUser(user)
+      this.presentSnackBar('Usuario eliminado')
+    } catch (err) {
+      console.error(err)
+      this.presentSnackBar('Error al eliminar usuario')
+    }
   }
 
   showCreateAppUser(appUser: AppUser = {} as AppUser) {
     this.matDialogCtrl.open(EditAppUserComponent, {
       data: appUser
+    })
+  }
+
+  showChangePassword(appUser: AppUser) {
+    this.matDialogCtrl.open(EditUserPasswordComponent, {
+      data: {
+        uid: appUser.id
+      }
     })
   }
 
@@ -84,7 +83,7 @@ export class UsersComponent {
       {
         data: {
           actionName: 'Eliminar usuario',
-          message: `¿Deseas eliminar el usuario ${user.name}?`
+          message: `¿Deseas eliminar el usuario ${user.firstName} ${user.lastName}?`
         }
       }
     )

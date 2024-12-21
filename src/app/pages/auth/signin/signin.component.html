@@ -6,8 +6,8 @@
                 <p>
                     <mat-form-field class="full-field">
                         <mat-label>Usuario</mat-label>
-                        <input type="email" formControlName="email" matInput placeholder="micorreo@dominio.com">
-                        <mat-error *ngIf="authFormGr.invalid && (authFormGr.controls['email'].dirty || authFormGr.controls['email'].touched)">El correo es requerido</mat-error>
+                        <input type="text" formControlName="nickname" matInput placeholder="">
+                        <mat-error *ngIf="authFormGr.invalid && (authFormGr.controls['nickname'].dirty || authFormGr.controls['nickname'].touched)">El usuario es requerido</mat-error>
                     </mat-form-field>
                 </p>
                 <p>

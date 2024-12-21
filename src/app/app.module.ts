@@ -51,6 +51,7 @@ import { EditPackagingComponent } from './components/edit-packaging/edit-packagi
 import { ActionConfirmComponent } from './components/action-confirm/action-confirm.component';
 import { UsersComponent } from './pages/admin/users/users.component';
 import { EditAppUserComponent } from './components/edit-app-user/edit-app-user.component';
+import { EditUserPasswordComponent } from './components/edit-user-password/edit-user-password.component';
 
 @NgModule({
   declarations: [
@@ -74,7 +75,8 @@ import { EditAppUserComponent } from './components/edit-app-user/edit-app-user.c
     EditPackagingComponent,
     ActionConfirmComponent,
     UsersComponent,
-    EditAppUserComponent
+    EditAppUserComponent,
+    EditUserPasswordComponent
   ],
   imports: [
     BrowserModule,

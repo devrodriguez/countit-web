@@ -31,34 +31,39 @@ export class EditAppUserComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const { name, credentials: { email } = {} } = this.inputData
+    const { firstName, lastName, credentials: { nickname } = {} } = this.inputData
 
     this.appUserFormGr = this.blockFormBuilder.group({
-      name: new FormControl(name, [
+      firstName: new FormControl(firstName, [
         Validators.required,
       ]),
-      email: new FormControl(email, [
-        Validators.required,
-        Validators.email
-      ]),
-      password: new FormControl('', [
+      lastName: new FormControl(lastName, [
         Validators.required,
       ]),
+      password: new FormControl(''),
     })
+
+    if (!this.inputData.id) {
+      this.appUserFormGr.get('password').setValidators(Validators.required)
+    }
   }
 
   appUserFormSubmit() {
-    const { name, email, password } = this.appUserFormGr.value
+    const { firstName, lastName, password } = this.appUserFormGr.value
     this.newAppUser = { 
-      name,
-      credentials: { 
-        email,
-        password
-      }
+      firstName,
+      lastName,
     } as AppUser
 
     if (this.inputData.id) {
       this.newAppUser.id = this.inputData.id
+      this.newAppUser.credentials = {
+        nickname : this.inputData.credentials.nickname
+      }
+    } else {
+      this.newAppUser.credentials = {
+        password
+      }
     }
 
     this.appUserSrv.upsertAppUser(this.newAppUser)
@@ -74,7 +79,7 @@ export class EditAppUserComponent implements OnInit {
     })
     .catch(err => {
       if (err instanceof AlreadyExist) {
-        this.presentSnackBar('El usuario ya existe, ingrese un correo diferente')
+        this.presentSnackBar('El usuario ya existe')
         return  
       }
 

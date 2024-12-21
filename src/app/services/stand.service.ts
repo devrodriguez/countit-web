@@ -1,5 +1,18 @@
 import { Injectable } from '@angular/core';
-import { addDoc, collection, collectionData, CollectionReference, doc, DocumentData, Firestore, getDoc, getDocs, query, updateDoc, where, orderBy } from '@angular/fire/firestore';
+import {
+  DocumentData, 
+  Firestore, 
+  addDoc,
+  collection, 
+  collectionData, 
+  CollectionReference, 
+  doc, 
+  getDocs, 
+  query, 
+  updateDoc, 
+  where, 
+  orderBy
+} from '@angular/fire/firestore';
 
 import { Observable } from 'rxjs';
 
@@ -13,7 +26,9 @@ import { STAND_STATUS_ENABLED } from '../helpers/constants/stand';
 export class StandService {
   private standRef: CollectionReference<DocumentData>;
 
-  constructor(private readonly firestore: Firestore) {
+  constructor(
+    private readonly firestore: Firestore
+  ) {
     this.standRef = collection(this.firestore, 'stands')
   }
 
