@@ -75,8 +75,7 @@ export class AuthService {
       this.setToken(token)
 
       await this.auth.setPersistence(browserSessionPersistence)
-      const userCred = await signInWithCustomToken(this.auth, token)
-      userCred.user.getIdToken()
+      await signInWithCustomToken(this.auth, token)
     } catch (err) {
       console.error(err)
       if (err.status === 401) {

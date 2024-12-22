@@ -66,14 +66,12 @@ export const registerUser = onRequest({ cors: true, timeoutSeconds: 540 }, async
                 createdAt: new Date().getTime(),
             });
 
-            newUserDoc.id
-
-        res.status(201).json({ 
-            message: "user registered succesfully", 
+        res.status(201).json({
+            message: "user registered succesfully",
             user: {
                 uid: newUserDoc.id,
                 nickname
-            } 
+            }
         });
     } catch (error) {
         console.error("error on user registry", error);
@@ -85,7 +83,7 @@ export const updatePassword = onRequest({ cors: true, timeoutSeconds: 540 }, asy
     if (req.method !== 'POST') {
         res.status(400).json({ message: 'method is not valid' })
     }
-    
+
     const { uid, password } = req.body
 
     if (!uid || !password) {
@@ -97,7 +95,7 @@ export const updatePassword = onRequest({ cors: true, timeoutSeconds: 540 }, asy
         const hashedPassword = await hash(password, saltRounds);
         const docRef = admin.firestore().collection('users').doc(uid)
         await docRef.update({ 'credentials.password': hashedPassword })
-        
+
         res.status(200).json({ message: 'password updated' })
     } catch (err) {
         console.error("error on update password", err);
@@ -114,7 +112,7 @@ export const loginUser = onRequest({ cors: true, timeoutSeconds: 540 }, async (r
         const { nickname, password } = req.body;
 
         if (!nickname || !password) {
-            res.status(400).json({ error: "user or password not valid" });
+            res.status(400).json({ error: "user or password not provided" });
         }
 
         const userQuery = await admin.firestore()
@@ -123,19 +121,37 @@ export const loginUser = onRequest({ cors: true, timeoutSeconds: 540 }, async (r
             .get();
 
         if (userQuery.empty) {
-            res.status(404).json({ error: "not valid user" });
+            res.status(404)
+            .json({ 
+                error: "not valid user" 
+            });
         }
 
-        const userData = userQuery.docs[0].data();
-        const isPasswordValid = await compare(password, userData.credentials.password);
+        const [userDoc] = userQuery.docs
+        const { id: uid } = userDoc
 
+        const { 
+            firstName,
+            lastName,
+            credentials: 
+            { 
+                password: currPass 
+            }
+        } = userDoc.data();
+
+        const isPasswordValid = await compare(password, currPass);
         if (!isPasswordValid) {
             res.status(401).json({ error: "not valid password" });
         }
 
-        const customToken = await admin.auth().createCustomToken(userQuery.docs[0].id);
-
-        res.status(200).json({ message: 'user logged in', token: customToken });
+        const customToken = await admin.auth().createCustomToken(uid);
+        res.status(200).json({ 
+            message: 'user logged in', 
+            token: customToken,
+            user: {
+                fullName: `${firstName} ${lastName}`
+            }
+        });
     } catch (error) {
         console.error("error on user login", error);
         res.status(500).json({ error: "error on user login" });
@@ -177,7 +193,7 @@ export const validateUserToken = onRequest({ cors: true, timeoutSeconds: 540 }, 
         })
     } catch (err) {
         console.error('error validating token', err)
-        res.status(403).json({ error: 'invalid token or expired '})
+        res.status(403).json({ error: 'invalid token or expired ' })
     }
 })
 
