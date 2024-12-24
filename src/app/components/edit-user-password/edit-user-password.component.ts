@@ -37,7 +37,7 @@ export class EditUserPasswordComponent implements OnInit {
     .subscribe({
       next: (res) => {
         console.log(res)
-        this.presentSnackBar('Password actualizado')
+        this.presentSnackBar('Contraseña actualizada')
         this.passForm.reset()
         this.dialogPassRef.close()
       },

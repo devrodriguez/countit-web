@@ -10,6 +10,20 @@ export const deleteAuthUser = onRequest({ cors: true, timeoutSeconds: 540 }, asy
         return
     }
 
+    const { headers: { authorization: authHeader } } = req
+
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        res.status(401).json({ message: 'not valid authentication' })
+    }
+
+    const [,idToken] = authHeader.split('Bearer ')
+    try {
+        await admin.auth().verifyIdToken(idToken)
+    } catch (err) {
+        console.error('error validating token', err)
+        res.status(403).json({ message: 'not valid token or lapsed' })
+    }
+
     if (!req.query || !req.query.uid) {
         res.status(400).json({ message: 'uid is required' })
     }
@@ -40,13 +54,33 @@ export const deleteAuthUser = onRequest({ cors: true, timeoutSeconds: 540 }, asy
 export const registerUser = onRequest({ cors: true, timeoutSeconds: 540 }, async (req, res) => {
     if (req.method !== 'POST') {
         res.status(400).json({ message: 'method is not valid' })
+        return
+    }
+
+    const { headers: { authorization: authHeader } } = req
+
+    console.log('auth header:', authHeader)
+
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        res.status(401).json({ message: 'not valid authentication' })
+        return
+    }
+
+    const [,idToken] = authHeader.split('Bearer ')
+    try {
+        await admin.auth().verifyIdToken(idToken)
+    } catch (err) {
+        console.error('error validating token', err)
+        res.status(403).json({ message: 'not valid token or lapsed' })
+        return
     }
 
     try {
         const { firstName, lastName, password, status } = req.body
 
         if (!firstName || !lastName || !password) {
-            res.status(400).json({ error: "not valid body" });
+            res.status(400).json({ error: "not valid body" })
+            return
         }
 
         const nickname = await buildNickname(firstName, lastName)

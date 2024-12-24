@@ -40,7 +40,10 @@ export class EditAppUserComponent implements OnInit {
       lastName: new FormControl(lastName, [
         Validators.required,
       ]),
-      password: new FormControl(''),
+      password: new FormControl('', [
+        Validators.required,
+        Validators.minLength(6)
+      ]),
     })
 
     if (!this.inputData.id) {
@@ -48,7 +51,7 @@ export class EditAppUserComponent implements OnInit {
     }
   }
 
-  appUserFormSubmit() {
+  async appUserFormSubmit() {
     const { firstName, lastName, password } = this.appUserFormGr.value
     this.newAppUser = { 
       firstName,

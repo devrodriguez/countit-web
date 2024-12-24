@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
@@ -16,6 +16,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./block.component.scss']
 })
 export class BlockComponent {
+  @Input() data: Block[]
   @ViewChild(MatPaginator) set matPaginator(paginator: MatPaginator) {
     this.dataSource.paginator = paginator
   };
@@ -34,6 +35,7 @@ export class BlockComponent {
     private matSnackBarCtrl: MatSnackBar,
   ) {
     this.loadBlocks()
+    // this.dataSource = new MatTableDataSource<Block>(this.data)
   }
 
   loadBlocks() {
