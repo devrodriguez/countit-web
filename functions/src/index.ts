@@ -1,22 +1,32 @@
 import { onRequest } from "firebase-functions/v2/https";
+import * as express from 'express';
 import * as admin from 'firebase-admin'
+
 import { compare, genSalt, hash } from 'bcrypt';
+import * as cors from 'cors';
+
+import { buildNickname } from "./helpers";
+
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 admin.initializeApp()
 
-export const deleteAuthUser = onRequest({ cors: true, timeoutSeconds: 540 }, async (req, res) => {
-    if (req.method !== 'DELETE') {
-        res.status(400).json({ message: 'method is not valid' })
-        return
-    }
+app.get('/hi', (req, res) => {
+    res.send('Hello World!')
+})
 
-    const { headers: { authorization: authHeader } } = req
+app.delete('/deleteAuthUser', async (req, res) => {
+    const { headers: { authorization: authHeader } } = req
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
         res.status(401).json({ message: 'not valid authentication' })
     }
 
-    const [,idToken] = authHeader.split('Bearer ')
+    const [, idToken] = authHeader.split('Bearer ')
     try {
         await admin.auth().verifyIdToken(idToken)
     } catch (err) {
@@ -51,13 +61,8 @@ export const deleteAuthUser = onRequest({ cors: true, timeoutSeconds: 540 }, asy
     }
 })
 
-export const registerUser = onRequest({ cors: true, timeoutSeconds: 540 }, async (req, res) => {
-    if (req.method !== 'POST') {
-        res.status(400).json({ message: 'method is not valid' })
-        return
-    }
-
-    const { headers: { authorization: authHeader } } = req
+app.post('/registerUser', async (req, res) => {
+    const { headers: { authorization: authHeader } } = req
 
     console.log('auth header:', authHeader)
 
@@ -66,7 +71,7 @@ export const registerUser = onRequest({ cors: true, timeoutSeconds: 540 }, async
         return
     }
 
-    const [,idToken] = authHeader.split('Bearer ')
+    const [, idToken] = authHeader.split('Bearer ')
     try {
         await admin.auth().verifyIdToken(idToken)
     } catch (err) {
@@ -83,7 +88,20 @@ export const registerUser = onRequest({ cors: true, timeoutSeconds: 540 }, async
             return
         }
 
-        const nickname = await buildNickname(firstName, lastName)
+        // Find user by first and last name
+        const userQuery = await admin.firestore()
+            .collection("users")
+            .where("firstName", "==", firstName)
+            .where("lastName", "==", lastName)
+            .get();
+
+        if (!userQuery.empty) {
+            res.status(409).json({ error: "user already exists" });
+            return
+        }
+
+        // If user dont exists, create a new one
+        const nickname = await buildNickname(admin, firstName, lastName)
         const saltRounds = await genSalt(10)
         const hashedPassword = await hash(password, saltRounds);
 
@@ -113,11 +131,7 @@ export const registerUser = onRequest({ cors: true, timeoutSeconds: 540 }, async
     }
 })
 
-export const updatePassword = onRequest({ cors: true, timeoutSeconds: 540 }, async (req, res) => {
-    if (req.method !== 'POST') {
-        res.status(400).json({ message: 'method is not valid' })
-    }
-
+app.post('/updatePassword', async (req, res) => {
     const { uid, password } = req.body
 
     if (!uid || !password) {
@@ -137,11 +151,7 @@ export const updatePassword = onRequest({ cors: true, timeoutSeconds: 540 }, asy
     }
 })
 
-export const loginUser = onRequest({ cors: true, timeoutSeconds: 540 }, async (req, res) => {
-    if (req.method !== 'POST') {
-        res.status(400).json({ message: 'method is not valid' })
-    }
-
+app.post('/loginUser', async (req, res) => {
     try {
         const { nickname, password } = req.body;
 
@@ -156,20 +166,20 @@ export const loginUser = onRequest({ cors: true, timeoutSeconds: 540 }, async (r
 
         if (userQuery.empty) {
             res.status(404)
-            .json({ 
-                error: "not valid user" 
-            });
+                .json({
+                    error: "not valid user"
+                });
         }
 
         const [userDoc] = userQuery.docs
         const { id: uid } = userDoc
 
-        const { 
+        const {
             firstName,
             lastName,
-            credentials: 
-            { 
-                password: currPass 
+            credentials:
+            {
+                password: currPass
             }
         } = userDoc.data();
 
@@ -179,8 +189,8 @@ export const loginUser = onRequest({ cors: true, timeoutSeconds: 540 }, async (r
         }
 
         const customToken = await admin.auth().createCustomToken(uid);
-        res.status(200).json({ 
-            message: 'user logged in', 
+        res.status(200).json({
+            message: 'user logged in',
             token: customToken,
             user: {
                 fullName: `${firstName} ${lastName}`
@@ -192,7 +202,7 @@ export const loginUser = onRequest({ cors: true, timeoutSeconds: 540 }, async (r
     }
 })
 
-export const generateUserToken = onRequest({ cors: true, timeoutSeconds: 540 }, async (req, res) => {
+app.post('/generateUserToken', async (req, res) => {
     try {
         const { uid } = req.body
 
@@ -213,7 +223,7 @@ export const generateUserToken = onRequest({ cors: true, timeoutSeconds: 540 }, 
     }
 })
 
-export const validateUserToken = onRequest({ cors: true, timeoutSeconds: 540 }, async (req, res) => {
+app.post('/validateUserToken', async (req, res) => {
     const tokenId = req.headers.authorization?.split('Bearer ')[1]
 
     if (!tokenId) {
@@ -231,33 +241,4 @@ export const validateUserToken = onRequest({ cors: true, timeoutSeconds: 540 }, 
     }
 })
 
-export const ping = onRequest(async (req, res) => {
-    res.json({ message: 'pong' })
-});
-
-async function buildNickname(firstName: string, lastName: string): Promise<string> {
-    let nickname = ''
-    let exist = true
-    let attempt = 0
-
-    const firstNameSp = firstName.split(' ')[0]
-    const lastNameSp = lastName.split(' ')[0]
-    const normalLastName = lastNameSp.toLowerCase().replace(/\s+/g, '')
-
-    while (exist) {
-        if (attempt < firstNameSp.length) {
-            const currentLetter = firstNameSp[attempt].toLowerCase()
-            nickname = `${currentLetter}${normalLastName}`
-        } else {
-            nickname = `${normalLastName[0]}${normalLastName}`
-        }
-
-        const userFound = await admin.firestore().collection('users').where('nickname', '==', nickname).get()
-
-        if (userFound.empty) break
-
-        attempt++
-    }
-
-    return nickname
-}
+exports.api = onRequest(app);

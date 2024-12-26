@@ -7,17 +7,16 @@ import {
   User,
   browserSessionPersistence,
 } from '@angular/fire/auth';
-import { Firestore } from '@angular/fire/firestore'
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 
 import { UserUnauthorized } from '../helpers/errors/userUnauthorized';
 import { AppUser } from '../interfaces/auth/app-user';
 
-const apiURLDeleteUser = 'https://deleteauthuser-xzkfsurz5q-uc.a.run.app'
-const apiURLLoginUser = 'https://loginuser-xzkfsurz5q-uc.a.run.app'
-const apiURLRegisterUser = 'https://registeruser-xzkfsurz5q-uc.a.run.app'
-const apiURLUpdatePassword = 'https://updatepassword-xzkfsurz5q-uc.a.run.app'
+const apiURLDeleteUser = 'https://us-central1-countit-c0d6f.cloudfunctions.net/api/deleteAuthUser'
+const apiURLLoginUser = 'https://us-central1-countit-c0d6f.cloudfunctions.net/api/loginUser'
+const apiURLRegisterUser = 'https://us-central1-countit-c0d6f.cloudfunctions.net/api/registerUser'
+const apiURLUpdatePassword = 'https://us-central1-countit-c0d6f.cloudfunctions.net/api/updatePassword'
 
 @Injectable({
   providedIn: 'root'
