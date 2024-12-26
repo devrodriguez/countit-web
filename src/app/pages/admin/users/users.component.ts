@@ -8,8 +8,6 @@ import { AppUser } from 'src/app/interfaces/auth/app-user';
 import { AppUserService } from 'src/app/services/app-user.service';
 import { EditAppUserComponent } from 'src/app/components/edit-app-user/edit-app-user.component';
 import { ActionConfirmComponent } from 'src/app/components/action-confirm/action-confirm.component';
-import { AuthService } from 'src/app/services/auth.service';
-import { FB_AUTH_USER_NOT_FOUND } from 'src/app/helpers/constants/app-user';
 import { EditUserPasswordComponent } from 'src/app/components/edit-user-password/edit-user-password.component';
 
 @Component({
@@ -36,7 +34,6 @@ export class UsersComponent {
     private appUserSrv: AppUserService,
     private matDialogCtrl: MatDialog,
     private matSnackBarCtrl: MatSnackBar,
-    private authSrv: AuthService
   ) {
     this.loadAppUsers()
   }
@@ -78,6 +75,8 @@ export class UsersComponent {
   }
 
   showRemove(user: AppUser) {
+    if (user.credentials.nickname === 'padmin') return
+    
     this.matDialogCtrl.open(
       ActionConfirmComponent,
       {

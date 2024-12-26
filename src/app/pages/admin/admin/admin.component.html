@@ -1,7 +1,7 @@
 <app-nav-toolbar></app-nav-toolbar>
 <mat-tab-group animationDuration="0ms" (selectedTabChange)="tabChange($event)">
     <mat-tab label="Bloque">
-        <app-block></app-block>
+        <app-block [data]="blocks"></app-block>
     </mat-tab>
     <mat-tab label="Mesa">
         <app-stand></app-stand>

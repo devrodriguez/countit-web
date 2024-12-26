@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { Block } from 'src/app/interfaces/block';
 import { AuthService } from 'src/app/services/auth.service';
+import { BlockService } from 'src/app/services/block.service';
 
 @Component({
   selector: 'app-admin',
@@ -8,11 +10,24 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./admin.component.scss']
 })
 export class AdminComponent {
+  public blocks: Block[] = [] as Block[] 
+
   constructor(
-    private authSrv: AuthService,
-    private router: Router
+    private blockSrv: BlockService,
   ) {}
   tabChange(evt: any) {
-    console.log(evt)
+    // this.loadBlocks()
+  }
+
+  loadBlocks() {
+    this.blockSrv.getBlocks()
+    .subscribe({
+      next: data => {
+        this.blocks = data
+      },
+      error: err => {
+        console.error(err)
+      }
+    })
   }
 }
