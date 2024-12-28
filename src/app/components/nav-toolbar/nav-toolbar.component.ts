@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-nav-toolbar',
@@ -8,6 +9,8 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./nav-toolbar.component.scss']
 })
 export class NavToolbarComponent {
+  version: string = environment.app ? environment.app.version : '0.0.0'
+  
   constructor(
     private router: Router,
     private authSrv: AuthService) {}
