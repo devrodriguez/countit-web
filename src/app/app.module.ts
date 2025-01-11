@@ -28,7 +28,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSelectModule } from '@angular/material/select';
-
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatSortModule } from '@angular/material/sort';
 
 import { MatTableExporterModule } from 'mat-table-exporter';
 import { QRCodeModule } from 'angularx-qrcode';
@@ -96,6 +98,7 @@ import { EditUserPasswordComponent } from './components/edit-user-password/edit-
     provideFirestore(() => getFirestore()),
     provideDatabase(() => getDatabase()),
     provideStorage(() => getStorage()),
+    MatNativeDateModule,
     MatButtonModule,
     MatTableModule,
     MatToolbarModule,
@@ -109,6 +112,8 @@ import { EditUserPasswordComponent } from './components/edit-user-password/edit-
     MatTabsModule,
     MatSnackBarModule,
     MatSelectModule,
+    MatDatepickerModule,
+    MatSortModule,
     QRCodeModule
   ],
   providers: [

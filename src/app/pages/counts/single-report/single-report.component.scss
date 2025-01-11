@@ -15,3 +15,17 @@ table {
 .export-section {
     margin-bottom: 10px;
 }
+
+.filter-container {
+    display: flex;
+    align-items: center;
+    gap: 16px; /* Adjust the gap between elements as needed */
+}
+
+.filter-container mat-form-field:first-child {
+    flex: 0 0 30%;
+}
+
+.filter-container mat-form-field:last-child {
+    flex: 1;
+}

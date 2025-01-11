@@ -30,7 +30,10 @@ export class WorkpointService {
   }
 
   getWorkpoints() {
-    const docQuery = query(this.workpointRef, where('status', '==', 'enabled'))
+    const docQuery = query(
+      this.workpointRef, 
+      where('status', '==', 'enabled'),
+    )
     
     return collectionData(docQuery, {
       idField: 'id'
