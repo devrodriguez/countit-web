@@ -5,6 +5,8 @@ import { Workpoint } from "./workpoint"
 export interface Count {
     id: string
     amount: number
+    block?: string
+    stand?: string
     employee: Employee
     workpoint: Workpoint
     packaging: Packaging

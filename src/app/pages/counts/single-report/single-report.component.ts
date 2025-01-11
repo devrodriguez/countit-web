@@ -1,13 +1,11 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Count } from 'src/app/interfaces/count';
 import { CountService } from 'src/app/services/count.service';
 
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-
-
+import { MatSort } from '@angular/material/sort';
 import { MatTableExporterDirective, ExportType } from 'mat-table-exporter';
-import { MatSort, Sort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-single-report',
@@ -19,10 +17,7 @@ export class SingleReportComponent {
   @ViewChild(MatPaginator) set matPaginator(paginator: MatPaginator) {
     this.dataSource.paginator = paginator
   };
-  @ViewChild(MatSort) set matSort(sort: MatSort) {
-    this.dataSource.sort = sort
-  };
-
+  @ViewChild(MatSort) sort: MatSort
   @ViewChild('exporter') exporter: MatTableExporterDirective | null = null;
 
   displayedColumns: string[] = [
@@ -30,35 +25,39 @@ export class SingleReportComponent {
     'stand',
     'employee',
     'product',
-    'stand_amount',
+    'standAmount',
     'packaging',
     'amount',
-    'created_at',
-    'created_by',
+    'createdAt',
+    'createdBy',
   ];
-
-  activeMap = {
-    'block': 'workpoint.block.name'
-  }
 
   startDate: Date = new Date(new Date().setDate(new Date().getDate() - 7))
   endDate: Date = new Date()
 
-  public counts!: Count[]
+  countsList: Count[] = []
 
   constructor(
     private readonly countsSrv: CountService
   ) {
-    this.loadCounts(this.startDate, this.endDate, this.activeMap['block'], 'asc')
+    this.loadCounts(this.startDate, this.endDate)
   }
 
-  async loadCounts(startDate: Date, endDate: Date, sortField: string, sortDirection: string) {
+  async loadCounts(startDate: Date, endDate: Date) {
     const startDateStamp = new Date(startDate).setHours(0, 0, 0, 0)
     const endDateStamp = new Date(endDate).setHours(23, 59, 59, 999)
 
     try {
       const counts = await this.countsSrv.getCounts(startDateStamp, endDateStamp)
-      this.dataSource.data = counts
+      this.countsList = counts.map(count => { 
+        return { 
+          block: count.workpoint.block.name,
+          stand: count.workpoint.stand.name,
+          ...count 
+        } 
+      })
+      this.dataSource.data = this.countsList
+      this.dataSource.sort = this.sort
       this.dataSource.filterPredicate = (data: Count, filter: string): boolean => {
         const dataStr = JSON.stringify(data).toLocaleLowerCase()
         return dataStr.includes(filter)
@@ -91,23 +90,14 @@ export class SingleReportComponent {
   exportTable(type: ExportType | 'csv' | 'xlsx') {
     if (this.exporter) {
       this.exporter.exportTable(type, {
-        'fileName': 'report-counts'
+        'fileName': 'counts-report'
       })
     }
   }
 
-  onStartDateChange(event: any) {
-    console.log(event)
-  }
-
   onEndDateChange(event: any) {
     if (this.startDate && this.endDate) {
-      this.loadCounts(this.startDate, this.endDate, this.activeMap['block'], 'asc')
+      this.loadCounts(this.startDate, this.endDate)
     }
-  }
-
-  onSortData(sort: Sort) {
-    const active = this.activeMap[sort.active]
-    // this.loadCounts(this.startDate, this.endDate, active, sort.direction)
   }
 }
