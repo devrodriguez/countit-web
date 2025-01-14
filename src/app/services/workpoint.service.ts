@@ -29,12 +29,17 @@ export class WorkpointService {
     this.workpointRef = collection(this.firestore, 'workpoint')
   }
 
-  getWorkpoints() {
-    const docQuery = query(this.workpointRef, where('status', '==', 'enabled'))
-    
-    return collectionData(docQuery, {
-      idField: 'id'
-    }) as Observable<Workpoint[]>
+  async getWorkpoints() {
+    const docQuery = query(
+      this.workpointRef, 
+      where('status', '==', 'enabled'),
+    )
+
+    const querySnap = await getDocs(docQuery)
+    return querySnap.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    } as Workpoint))
   }
 
   addWorkpoint(workpoint: Workpoint) {

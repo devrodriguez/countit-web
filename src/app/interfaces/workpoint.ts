@@ -6,6 +6,7 @@ import { Stand } from "./stand"
 export interface Workpoint {
     id?: string
     name?: string
+    blockn?: string
     employee: Employee
     block: Block
     stand: Stand

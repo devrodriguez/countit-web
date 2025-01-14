@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collectionData, collection, CollectionReference, DocumentData, query, orderBy } from '@angular/fire/firestore';
+import { Firestore, collectionData, collection, CollectionReference, DocumentData, query, orderBy, getDocs } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Count } from '../interfaces/count';
+import { where } from 'firebase/firestore';
+import { SortDirection } from '@angular/material/sort';
 
 @Injectable({
   providedIn: 'root'
@@ -15,16 +17,18 @@ export class CountService {
     this.collRef = collection(this.firestore, 'counts');
   }
 
-  getCounts() {
-    const docQuery = query(
+  async getCounts(startDate: number, endDate: number) {
+    let docQuery = query(
       this.collRef, 
-      orderBy('createdAt')
+      where('createdAt', '>=', startDate),
+      where('createdAt', '<=', endDate),
+      orderBy('createdAt', 'desc'),
     )
-    return collectionData(
-      docQuery, 
-      {
-        idField: 'id'
-      }
-    ) as Observable<Count[]>;
+
+    const querySnap = await getDocs(docQuery)
+    return querySnap.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    } as Count))
   }
 }

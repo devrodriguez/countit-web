@@ -2,15 +2,21 @@
     <section class="edit-section">
         <button mat-raised-button class="mr-10" (click)="showCreateWorkpoint()">Nuevo Puesto</button>
     </section>
-    <section *ngIf="dataSource.data.length">
-        <table mat-table [dataSource]="dataSource">
+    <section *ngIf="dataSource">
+        <table 
+            mat-table 
+            matSort 
+            matSortActive="place"
+            matSortDirection="asc"
+            matSortDisableClear
+            [dataSource]="dataSource">
             <ng-container matColumnDef="employee">
                 <th mat-header-cell *matHeaderCellDef>Empleado</th>
                 <td mat-cell *matCellDef="let workpoint">{{ workpoint?.employee?.firstName }}  {{ workpoint?.employee?.lastName }}</td>
             </ng-container>
-            <ng-container matColumnDef="block">
-                <th mat-header-cell *matHeaderCellDef>Bloque</th>
-                <td mat-cell *matCellDef="let workpoint">{{ workpoint.block.name }}</td>
+            <ng-container matColumnDef="place">
+                <th mat-sort-header mat-header-cell *matHeaderCellDef>Bloque</th>
+                <td mat-cell *matCellDef="let workpoint">{{ workpoint.place }}</td>
             </ng-container>
             <ng-container matColumnDef="product">
                 <th mat-header-cell *matHeaderCellDef>Variedad</th>
@@ -70,7 +76,9 @@
             <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
-        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+        <mat-paginator 
+            [pageSizeOptions]="[10, 15, 20]" 
+            showFirstLastButtons
             aria-label="Select page of periodic elements">
         </mat-paginator>
     </section>
