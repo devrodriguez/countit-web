@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import {  } from 'angularx-qrcode'
+import { MatSort } from '@angular/material/sort';
 
 import { QrComponent } from 'src/app/components/qr/qr.component';
 import { Workpoint } from 'src/app/interfaces/workpoint';
@@ -19,14 +19,16 @@ import { convertBase64ToBlob } from 'src/app/helpers/converter/images';
   styleUrls: ['./workpoint.component.scss']
 })
 export class WorkpointComponent {
+  dataSource = new MatTableDataSource<Workpoint>()
   @ViewChild(MatPaginator) set matPaginator(paginator: MatPaginator) {
     this.dataSource.paginator = paginator
   };
+  @ViewChild(MatSort) sort: MatSort
 
-  workpointList: Workpoint[] | null = null
+  workpointList: Workpoint[] = []
   displayedColumns: string[] = [
     'employee',
-    'block',
+    'place',
     'product',
     'stand',
     'edit',
@@ -35,7 +37,6 @@ export class WorkpointComponent {
     'download',
     'remove',
   ];
-  dataSource = new MatTableDataSource<Workpoint>()
 
   constructor(
     private workpointSrv: WorkpointService,
@@ -45,16 +46,20 @@ export class WorkpointComponent {
     this.loadWorkpoints()
   }
 
-  loadWorkpoints() {
-    this.workpointSrv.getWorkpoints()
-    .subscribe({
-      next: wpData => {
-        this.dataSource = new MatTableDataSource<Workpoint>(wpData)
-      },
-      error: err => {
-        console.error(err)
-      }
-    })
+  async loadWorkpoints() {
+    try {
+      const wpData = await this.workpointSrv.getWorkpoints()
+      this.workpointList = wpData.map(wp => {
+        return {
+          place: wp.block.name,
+          ...wp,
+        }
+      })
+      this.dataSource.data = this.workpointList
+      this.dataSource.sort = this.sort
+    } catch (err) {
+      console.error(err)
+    }
   }
 
   async deleteWorkpoint(workpoint: Workpoint) {
@@ -93,19 +98,19 @@ export class WorkpointComponent {
         }
       }
     )
-    .afterClosed()
-    .subscribe(async (isConfirmed: Boolean) => {
-      if(isConfirmed) {
-        await this.deleteWorkpoint(workpoint)
-      }
-    })
+      .afterClosed()
+      .subscribe(async (isConfirmed: Boolean) => {
+        if (isConfirmed) {
+          await this.deleteWorkpoint(workpoint)
+        }
+      })
   }
 
   printQR(item: any) {
     const qrImage = item.qrcElement.nativeElement.getElementsByTagName('img')[0].currentSrc
     const qrWindow = window.open("", "_blank")
-    qrWindow?.document.write("<img style=\"min-width: 200px;\" src=\""+qrImage+"\">");
-    setTimeout(()=> {
+    qrWindow?.document.write("<img style=\"min-width: 200px;\" src=\"" + qrImage + "\">");
+    setTimeout(() => {
       qrWindow?.print()
       qrWindow?.close()
     }, 100)
