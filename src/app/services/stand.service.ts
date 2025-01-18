@@ -19,24 +19,26 @@ import { Observable } from 'rxjs';
 import { Stand } from '../interfaces/stand';
 import { AlreadyExist } from '../helpers/errors/alreadyExist';
 import { STAND_STATUS_ENABLED } from '../helpers/constants/stand';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StandService {
+  private docName = environment.app.environment === 'dev' ? 'stands-dev' : 'stands'
+
   private standRef: CollectionReference<DocumentData>;
 
   constructor(
     private readonly firestore: Firestore
   ) {
-    this.standRef = collection(this.firestore, 'stands')
+    this.standRef = collection(this.firestore, this.docName)
   }
 
   getStands() {
     const docQuery = query(
       this.standRef, 
       where('status', '==', 'enabled'),
-      orderBy('name')
     )
     
     return collectionData(docQuery, {

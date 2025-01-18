@@ -18,28 +18,28 @@ import { Observable } from 'rxjs';
 import { Workpoint } from '../interfaces/workpoint';
 import { AlreadyExist } from '../helpers/errors/alreadyExist';
 import { WORKPOINT_STATUS_ENABLED } from '../helpers/constants/workpoint';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WorkpointService {
+  private docName = environment.app.environment === 'dev' ? 'workpoint-dev' : 'workpoint'
   private workpointRef: CollectionReference<DocumentData>;
 
   constructor(private readonly firestore: Firestore) {
-    this.workpointRef = collection(this.firestore, 'workpoint')
+    this.workpointRef = collection(this.firestore, this.docName)
   }
 
-  async getWorkpoints() {
+  getWorkpoints() {
     const docQuery = query(
       this.workpointRef, 
       where('status', '==', 'enabled'),
     )
 
-    const querySnap = await getDocs(docQuery)
-    return querySnap.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    } as Workpoint))
+    return collectionData(docQuery, {
+      idField: 'id'
+    }) as Observable<Workpoint[]>
   }
 
   addWorkpoint(workpoint: Workpoint) {

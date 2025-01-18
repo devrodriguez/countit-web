@@ -1,4 +1,10 @@
-import { Component, ViewChild } from '@angular/core';
+import { 
+  Component, 
+  Input, OnChanges, 
+  OnInit, 
+  SimpleChanges, 
+  ViewChild,
+} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -18,12 +24,16 @@ import { convertBase64ToBlob } from 'src/app/helpers/converter/images';
   templateUrl: './workpoint.component.html',
   styleUrls: ['./workpoint.component.scss']
 })
-export class WorkpointComponent {
+export class WorkpointComponent implements OnInit, OnChanges {
   dataSource = new MatTableDataSource<Workpoint>()
+
+  @Input() data: Workpoint[] = []
   @ViewChild(MatPaginator) set matPaginator(paginator: MatPaginator) {
     this.dataSource.paginator = paginator
-  };
-  @ViewChild(MatSort) sort: MatSort
+  }
+  @ViewChild(MatSort) set matSort(sort: MatSort) {
+    this.dataSource.sort = sort
+  }
 
   workpointList: Workpoint[] = []
   displayedColumns: string[] = [
@@ -42,23 +52,16 @@ export class WorkpointComponent {
     private workpointSrv: WorkpointService,
     private matDialogCtrl: MatDialog,
     private matSnackBar: MatSnackBar,
-  ) {
-    this.loadWorkpoints()
+  ) { }
+
+  ngOnInit(): void {
+
   }
 
-  async loadWorkpoints() {
-    try {
-      const wpData = await this.workpointSrv.getWorkpoints()
-      this.workpointList = wpData.map(wp => {
-        return {
-          place: wp.block.name,
-          ...wp,
-        }
-      })
-      this.dataSource.data = this.workpointList
-      this.dataSource.sort = this.sort
-    } catch (err) {
-      console.error(err)
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log('changes workpoint', changes)
+    if (changes['data']) {
+      this.dataSource.data = changes['data'].currentValue
     }
   }
 

@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
@@ -15,7 +15,10 @@ import { ActionConfirmComponent } from 'src/app/components/action-confirm/action
   templateUrl: './packaging.component.html',
   styleUrls: ['./packaging.component.scss']
 })
-export class PackagingComponent {
+export class PackagingComponent implements OnChanges {
+  dataSource = new MatTableDataSource<Packaging>()
+
+  @Input() data: Packaging[] = []
   @ViewChild(MatPaginator) set matPaginator(paginator: MatPaginator) {
     this.dataSource.paginator = paginator
   };
@@ -26,26 +29,18 @@ export class PackagingComponent {
     'edit',
     'remove',
   ];
-  dataSource = new MatTableDataSource<Packaging>()
 
   constructor(
     private packagingSrv: PackagingService,
     private matDialogCtrl: MatDialog,
     private readonly matSnackBar: MatSnackBar,
-  ) {
-    this.loadPackaging()
-  }
+  ) {}
 
-  loadPackaging() {
-    this.packagingSrv.getPackaging()
-    .subscribe({
-      next: data => {
-        this.dataSource = new MatTableDataSource<Packaging>(data)
-      },
-      error: err => {
-        console.error(err)
-      }
-    })
+  ngOnChanges(changes: SimpleChanges) {
+    console.log('changes packaging', changes)
+    if (changes['data']) {
+      this.dataSource.data = changes['data'].currentValue
+    }
   }
 
   async deletePackaging(packaging: Packaging) {

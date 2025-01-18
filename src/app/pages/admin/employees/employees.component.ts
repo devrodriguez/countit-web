@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 
@@ -17,7 +17,10 @@ import { convertBase64ToBlob } from 'src/app/helpers/converter/images';
   templateUrl: './employees.component.html',
   styleUrls: ['./employees.component.scss']
 })
-export class EmployeesComponent {
+export class EmployeesComponent implements OnChanges {
+  dataSource = new MatTableDataSource<Employee>()
+  
+  @Input() data: Employee[] = []
   @ViewChild(MatPaginator) set matPaginator(paginator: MatPaginator) {
     this.dataSource.paginator = paginator
   };
@@ -32,26 +35,18 @@ export class EmployeesComponent {
     'download',
     'remove'
   ];
-  dataSource = new MatTableDataSource<Employee>()
 
   constructor(
     private employeesSrv: EmployeesService,
     private matDialogCtrl: MatDialog,
     private matSnackBarCtrl: MatSnackBar,
-  ) {
-    this.loadEmployees()
-  }
+  ) {}
 
-  loadEmployees() {
-    this.employeesSrv.getEmployees()
-    .subscribe({
-      next: employeeData => {
-        this.dataSource = new MatTableDataSource<Employee>(employeeData)
-      },
-      error: err => {
-        console.error(err)
-      }
-    })
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log('changes employee', changes)
+    if (changes['data']) {
+      this.dataSource.data = changes['data'].currentValue
+    }
   }
 
   async deleteEmployee(employee: Employee) {

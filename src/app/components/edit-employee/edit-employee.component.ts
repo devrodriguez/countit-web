@@ -57,9 +57,11 @@ export class EditEmployeeComponent implements OnInit {
       bedsAmount: new FormControl(0, [])
     })
 
-    productBeds.forEach(({ productName, bedsAmount }) => {
-      this.appendProductBeds(productName, bedsAmount)
-    })
+    if (productBeds) {
+      productBeds.forEach(({ productName, bedsAmount }) => {
+        this.appendProductBeds(productName, bedsAmount)
+      })
+    }
   }
 
   get productBedsFrm(): FormArray {

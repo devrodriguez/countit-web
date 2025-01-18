@@ -17,15 +17,17 @@ import { Observable } from 'rxjs';
 
 import { Packaging } from '../interfaces/packaging';
 import { AlreadyExist } from '../helpers/errors/alreadyExist';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PackagingService {
+  private docName = environment.app.environment === 'dev' ? 'packaging-dev' : 'packaging'
   private packagingRef: CollectionReference<DocumentData>;
 
   constructor(private readonly firestore: Firestore) {
-    this.packagingRef = collection(this.firestore, 'packaging')
+    this.packagingRef = collection(this.firestore, this.docName)
   }
 
   getPackaging() {
