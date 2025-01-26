@@ -39,6 +39,7 @@ export class StandService {
     const docQuery = query(
       this.standRef, 
       where('status', '==', 'enabled'),
+      orderBy('name')
     )
     
     return collectionData(docQuery, {

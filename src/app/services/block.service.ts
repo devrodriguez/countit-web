@@ -18,6 +18,7 @@ import { Block } from '../interfaces/block';
 import { AlreadyExist } from '../helpers/errors/alreadyExist';
 import { BLOCK_STATUS_DISABLED, BLOCK_STATUS_ENABLED } from '../helpers/constants/block';
 import { environment } from 'src/environments/environment';
+import { orderBy } from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -34,6 +35,7 @@ export class BlockService {
     const docQuery = query(
       this.blockRef,
       where('status', '==', 'enabled'),
+      orderBy('name'),
     )
     return collectionData(docQuery, {
       idField: 'id'

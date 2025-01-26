@@ -9,6 +9,6 @@ export const environment = {
     },
     app: {
         environment: 'dev',
-        version: '1.0.0-test-1',
+        version: '1.0.0-test-2',
     }
 }

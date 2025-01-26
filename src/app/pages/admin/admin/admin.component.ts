@@ -119,7 +119,12 @@ export class AdminComponent implements OnInit, OnDestroy {
     .pipe(takeUntil(this.destroy$))
     .subscribe({
       next: data => {
-        this.workpoints = data
+        this.workpoints = data.map(wp => {
+          return {
+            place: wp.block.name,
+            ...wp,
+          }
+        })
       },
       error: err => {
         console.error(err)
