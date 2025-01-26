@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 
@@ -16,7 +16,9 @@ import { ActionConfirmComponent } from 'src/app/components/action-confirm/action
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.scss']
 })
-export class ProductsComponent {
+export class ProductsComponent implements OnChanges {
+  dataSource = new MatTableDataSource<Product>()
+  @Input() data: Product[] = []
   @ViewChild(MatPaginator) set matPaginator(paginator: MatPaginator) {
     this.dataSource.paginator = paginator
   };
@@ -29,26 +31,18 @@ export class ProductsComponent {
     'print',
     'remove'
   ];
-  dataSource = new MatTableDataSource<Product>()
 
   constructor(
     private productsSrv: ProductsService,
     private matDialogCtrl: MatDialog,
     private readonly matSnackBar: MatSnackBar,
-  ) {
-    this.loadProducts()
-  }
+  ) {}
 
-  loadProducts() {
-    this.productsSrv.getProducts()
-    .subscribe({
-      next: productData => {
-        this.dataSource = new MatTableDataSource<Product>(productData)
-      },
-      error: err => {
-        console.error(err)
-      }
-    })
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log('changes product', changes)
+    if(changes['data']) {
+      this.dataSource.data = changes['data'].currentValue
+    }
   }
 
   async deleteProduct(product: Product) {

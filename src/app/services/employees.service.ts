@@ -18,15 +18,18 @@ import { Observable } from 'rxjs';
 import { Employee } from '../interfaces/employee';
 import { AlreadyExist } from '../helpers/errors/alreadyExist';
 import { EMPLOYEE_STATUS_ENABLED } from '../helpers/constants/employee';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EmployeesService {
+  private docName = environment.app.environment === 'dev' ? 'employees-dev' : 'employees'
+
   private employeesRef: CollectionReference<DocumentData>;
 
   constructor(private readonly firestore: Firestore) { 
-    this.employeesRef = collection(this.firestore, 'employees')
+    this.employeesRef = collection(this.firestore, this.docName)
   }
 
   getEmployees() {

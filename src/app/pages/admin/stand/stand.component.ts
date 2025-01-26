@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
@@ -15,7 +15,10 @@ import { ActionConfirmComponent } from 'src/app/components/action-confirm/action
   templateUrl: './stand.component.html',
   styleUrls: ['./stand.component.scss']
 })
-export class StandComponent {
+export class StandComponent implements OnInit, OnChanges {
+  dataSource = new MatTableDataSource<Stand>()
+  
+  @Input() data: Stand[] = []
   @ViewChild(MatPaginator) set matPaginator(paginator: MatPaginator) {
     this.dataSource.paginator = paginator
   };
@@ -26,26 +29,22 @@ export class StandComponent {
     'edit',
     'remove'
   ];
-  dataSource = new MatTableDataSource<Stand>()
 
   constructor(
     private standSrv: StandService,
     private matDialogCtrl: MatDialog,
     private readonly matSnackBar: MatSnackBar,
-  ) {
-    this.loadStands()
+  ) {}
+
+  ngOnInit(): void {
+    this.dataSource.data = this.data
   }
 
-  loadStands() {
-    this.standSrv.getStands()
-    .subscribe({
-      next: data => {
-        this.dataSource = new MatTableDataSource<Stand>(data)
-      },
-      error: err => {
-        console.error(err)
-      }
-    })
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log('changes stand', changes)
+    if(changes['data']) {
+      this.dataSource.data = changes['data'].currentValue
+    }
   }
 
   async deleteStand(stand: Stand) {    

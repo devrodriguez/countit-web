@@ -142,7 +142,7 @@ export class EditWorkpointComponent implements OnInit {
       .then(res => {
         let message = 'Workpoint created successfully'
         if (this.newWorkpoint.id) {
-          message = 'Workpoint updated successfully'
+          message = 'Puesto de trabajo actualizado'
         }
 
         this.presentSnackBar(message)
@@ -151,7 +151,7 @@ export class EditWorkpointComponent implements OnInit {
       })
       .catch(err => {
         if (err instanceof AlreadyExist) {
-          this.presentSnackBar('Workpoint already exist')
+          this.presentSnackBar('El puesto de trabajo ya existe')
           return  
         }
 

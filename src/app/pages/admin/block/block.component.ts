@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
@@ -15,8 +15,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   templateUrl: './block.component.html',
   styleUrls: ['./block.component.scss']
 })
-export class BlockComponent {
-  @Input() data: Block[]
+export class BlockComponent implements OnInit, OnChanges {
+  dataSource = new MatTableDataSource<Block>()
+  @Input() data: Block[] = []
   @ViewChild(MatPaginator) set matPaginator(paginator: MatPaginator) {
     this.dataSource.paginator = paginator
   };
@@ -27,27 +28,22 @@ export class BlockComponent {
     'edit',
     'remove',
   ];
-  dataSource = new MatTableDataSource<Block>()
 
   constructor(
     private blockSrv: BlockService,
     private matDialogCtrl: MatDialog,
     private matSnackBarCtrl: MatSnackBar,
-  ) {
-    this.loadBlocks()
-    // this.dataSource = new MatTableDataSource<Block>(this.data)
+  ) {}
+
+  ngOnInit(): void {
+    this.dataSource.data = this.data
   }
 
-  loadBlocks() {
-    this.blockSrv.getBlocks()
-    .subscribe({
-      next: data => {
-        this.dataSource = new MatTableDataSource<Block>(data)
-      },
-      error: err => {
-        console.error(err)
-      }
-    })
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log('changes block', changes)
+    if(changes['data']) {
+      this.dataSource.data = changes['data'].currentValue
+    }
   }
 
   showRemove(block: Block) {

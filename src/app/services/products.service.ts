@@ -18,15 +18,18 @@ import { Observable } from 'rxjs';
 import { Product } from '../interfaces/product';
 import { AlreadyExist } from '../helpers/errors/alreadyExist';
 import { PRODUCT_STATUS_ENABLED } from '../helpers/constants/product';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductsService {
+  private docName = environment.app.environment === 'dev' ? 'products-dev' : 'products'
+
   private productRef: CollectionReference<DocumentData>;
 
   constructor(private readonly firestore: Firestore) {
-    this.productRef = collection(this.firestore, 'products')
+    this.productRef = collection(this.firestore, this.docName)
   }
 
   getProducts() {
