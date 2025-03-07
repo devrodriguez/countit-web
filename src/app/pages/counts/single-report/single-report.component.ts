@@ -50,12 +50,14 @@ export class SingleReportComponent {
     try {
       const counts = await this.countsSrv.getCounts(startDateStamp, endDateStamp)
       this.countsList = counts.map(count => { 
-        return { 
+        return {
+          ...count,
           block: count.workpoint.block.name,
           stand: count.workpoint.stand.name,
-          ...count 
-        } 
+          employee: count.workpoint.employee,
+        }
       })
+      
       this.dataSource.data = this.countsList
       this.dataSource.sort = this.sort
       this.dataSource.filterPredicate = (data: Count, filter: string): boolean => {
