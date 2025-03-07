@@ -19,6 +19,7 @@ import { Employee } from '../interfaces/employee';
 import { AlreadyExist } from '../helpers/errors/alreadyExist';
 import { EMPLOYEE_STATUS_ENABLED } from '../helpers/constants/employee';
 import { environment } from 'src/environments/environment';
+import { deleteDoc } from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -49,14 +50,11 @@ export class EmployeesService {
   }
 
   deleteEmployee(employee: Employee) {
-    return updateDoc(
+    deleteDoc(
       doc(
         this.employeesRef,
         employee.id
-      ),
-      {
-        ...employee
-      }
+      )
     )
   }
 
