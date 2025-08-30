@@ -50,7 +50,7 @@ export class EmployeesService {
   }
 
   deleteEmployee(employee: Employee) {
-    deleteDoc(
+    return deleteDoc(
       doc(
         this.employeesRef,
         employee.id

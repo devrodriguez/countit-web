@@ -62,12 +62,16 @@ export class WorkpointComponent implements OnInit, OnChanges {
     console.log('changes workpoint', changes)
     if (changes['data']) {
       this.dataSource.data = changes['data'].currentValue
+      // Configurar el filtro para que funcione con todos los campos
+      this.dataSource.filterPredicate = (data: Workpoint, filter: string): boolean => {
+        const dataStr = JSON.stringify(data).toLowerCase()
+        return dataStr.includes(filter.toLowerCase())
+      }
     }
   }
 
   async deleteWorkpoint(workpoint: Workpoint) {
     try {
-      workpoint.status = WORKPOINT_STATUS_DISABLED
       await this.workpointSrv.deleteWorkpoint(workpoint)
       this.presentSnackBar('Se ha eliminado el puesto de trabajo')
     } catch (err) {
@@ -140,5 +144,14 @@ export class WorkpointComponent implements OnInit, OnChanges {
     link.download = "workpoint"
     link.click()
     link.remove()
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 }

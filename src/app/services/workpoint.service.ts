@@ -17,8 +17,9 @@ import { Observable } from 'rxjs';
 
 import { Workpoint } from '../interfaces/workpoint';
 import { AlreadyExist } from '../helpers/errors/alreadyExist';
-import { WORKPOINT_STATUS_ENABLED } from '../helpers/constants/workpoint';
+import { WORKPOINT_STATUS_DISABLED, WORKPOINT_STATUS_ENABLED } from '../helpers/constants/workpoint';
 import { environment } from 'src/environments/environment';
+import { deleteDoc } from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -47,14 +48,11 @@ export class WorkpointService {
   }
 
   deleteWorkpoint(workpoint: Workpoint) {
-    return updateDoc(
+    return deleteDoc(
       doc(
         this.workpointRef,
         workpoint.id
       ),
-      {
-        ...workpoint
-      }
     )
   }
 
@@ -63,11 +61,15 @@ export class WorkpointService {
 
     const workpointFound = await this.findWorkpoint(workpoint)
 
-    if (workpointFound.id) {
-      if (workpoint.id !== workpointFound.id) throw new AlreadyExist()
-      else if (workpoint.id === workpointFound.id) return
+    if (workpointFound.id && workpoint.id !== workpointFound.id && workpointFound.status === WORKPOINT_STATUS_ENABLED) {
+      throw new AlreadyExist()
     }
-
+    else if (workpointFound.id && workpoint.id !== workpointFound.id && workpointFound.status === WORKPOINT_STATUS_DISABLED) {
+      workpoint.id = workpointFound.id
+      workpoint.status = WORKPOINT_STATUS_ENABLED
+    }
+    else if (workpointFound.id && workpoint.id === workpointFound.id) return
+    
     if (workpoint.id) {
       workpoint.updatedAt = now
 

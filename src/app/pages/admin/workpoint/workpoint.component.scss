@@ -10,3 +10,23 @@
     margin-top: 15px;
     margin-bottom: 10px;
 }
+
+.filter-section {
+    margin-bottom: 10px;
+}
+
+.filter-container {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.filter-container mat-form-field {
+    flex: 1;
+}
+
+.mat-mdc-form-field {
+    margin-top: 20px;
+    font-size: 14px;
+    width: 100%;
+}

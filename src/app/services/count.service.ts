@@ -1,20 +1,28 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collectionData, collection, CollectionReference, DocumentData, query, orderBy, getDocs } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { 
+  Firestore, 
+  collection, 
+  CollectionReference, 
+  DocumentData, 
+  query, 
+  orderBy, 
+  getDocs 
+} from '@angular/fire/firestore';
 import { Count } from '../interfaces/count';
 import { where } from 'firebase/firestore';
-import { SortDirection } from '@angular/material/sort';
-
+import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
 export class CountService {
   private collRef: CollectionReference<DocumentData>;
 
+  private docName = environment.app.environment === 'dev' ? 'counts-dev' : 'counts'
+
   constructor(
     private readonly firestore: Firestore
   ) {
-    this.collRef = collection(this.firestore, 'counts');
+    this.collRef = collection(this.firestore, this.docName);
   }
 
   async getCounts(startDate: number, endDate: number) {
