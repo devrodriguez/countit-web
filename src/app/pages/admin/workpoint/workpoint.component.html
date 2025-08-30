@@ -2,6 +2,15 @@
     <section class="edit-section">
         <button mat-raised-button class="mr-10" (click)="showCreateWorkpoint()">Nuevo Puesto</button>
     </section>
+    <section class="filter-section" *ngIf="dataSource.data.length > 0">
+        <div class="filter-container">
+            <mat-form-field>
+                <mat-label>Filtro</mat-label>
+                <input matInput (keyup)="applyFilter($event)" #input placeholder="Busqueda por campo">
+                <mat-hint>* El filtro se aplicará sobre todos los campos</mat-hint>
+            </mat-form-field>
+        </div>
+    </section>
     <section *ngIf="dataSource.data.length > 0">
         <table 
             mat-table 
